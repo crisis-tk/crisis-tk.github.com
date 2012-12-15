@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -14,10 +14,61 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Octopress のテーマを変更してみる]]></title>
+    <link href="http://crisis-tk.github.com/blog/2012/12/15/change-octpress-theme/"/>
+    <updated>2012-12-15T15:37:00+09:00</updated>
+    <id>http://crisis-tk.github.com/blog/2012/12/15/change-octpress-theme</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/shashankmehta/greyshade">shashankmehta / greyshade</a> という Octopress の良さげなテーマを発見したので変更してみる。</p>
+
+<!-- more -->
+
+
+<h2>インストール</h2>
+
+<p>README に書かれてあるとおりに実行していく。</p>
+
+<pre><code>$ git clone git@github.com:shashankmehta/greyshade.git .themes/greyshade
+$ echo "\$greyshade: color;" &gt;&gt; sass/custom/_colors.scss 
+$ rake install\['greyshade'\]
+$ rake generate
+</code></pre>
+
+<p>zsh の場合は <code>[...]</code> を <code>\[...\]</code> に変更しないと実行できないので注意。</p>
+
+<h2>プロフィール画像の設定</h2>
+
+<p>プロフィール画像を用意してないと, 折角のオサレテーマがダサくなっちゃうので用意する。<br/>
+画像は source/images/ に dp.jpg という名前で配置するといいみたい。</p>
+
+<pre><code>$ cp ~/Picture/{profile_picture}.jpg source/images/dp.jpg
+</code></pre>
+
+<h2>確認 &amp; デプロイ！</h2>
+
+<p>GitHub Pages にデプロイする前にプレビューで確認して, 問題なければデプロイ！</p>
+
+<pre><code>$ rake preview
+$ rake gen_deploy
+</code></pre>
+
+<p>できてるよね？</p>
+
+<p>source を bitbucket で管理してる場合は push を忘れずに&#8230;。</p>
+
+<pre><code>$ git add -A
+$ git commit -m "Octopress のテーマを変更！"
+$ git push -u bitbucket source
+</code></pre>
+
+<p>今回適用した Greyshade の他にも <a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a> にオサレなテーマがまとめられていました。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[CUDA 4.2 インストール ~ サンプルコード作成/実行]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
     <updated>2012-07-01T15:27:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
+    <id>http://crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
     <content type="html"><![CDATA[<p>手持ちの MacBook に CUDA を入れてみる。動作環境は下の通り。</p>
 
 <ul>
@@ -209,9 +260,9 @@ Processing time: 9255.196289 (msec)
   
   <entry>
     <title type="html"><![CDATA[Apache + Passenger で Sinatra アプリを動かす]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
     <updated>2012-06-14T21:09:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
+    <id>http://crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
     <content type="html"><![CDATA[<p>Apache上で Sinatra を動かしたい(= デプロイしたい?) 場合, Passenger とやらを使うと簡単らしいのでインストールしてみた。</p>
 
 <p>導入環境</p>
@@ -316,9 +367,9 @@ RackBaseURI /hello-world
   
   <entry>
     <title type="html"><![CDATA[octpress はじめました。]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
     <updated>2012-06-12T12:15:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
+    <id>http://crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
     <content type="html"><![CDATA[<p>今まで日々の作業記録は Evernote に取ってたのですが, ふとブログ書きたいと思いまして, <a href="http://pages.github.com/">Github Pages</a> と <a href="http://octopress.org/">Octpress</a> を利用してブログを構築してみました。</p>
 
 <p>今回は, はてなダイアリーから記事の移行と Github Pages + Octpress でブログ公開までの流れをまとめました。</p>
@@ -406,19 +457,10 @@ rake preview
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Hello, octopress!]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/06/10/hello/"/>
-    <updated>2012-06-10T19:48:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/06/10/hello</id>
-    <content type="html"><![CDATA[<p>octopress でブログ記事を投稿して見るテスト。</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Ruby on Rails 環境の導入]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/"/>
     <updated>2012-02-20T22:08:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro</id>
+    <id>http://crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro</id>
     <content type="html"><![CDATA[<p>CentOS 5.5 に Ruby on Rails 環境を導入する。</p>
 
 <ul>
@@ -562,9 +604,9 @@ Rails 3.2.1</code></pre>
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。 その4]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
     <updated>2011-09-05T22:01:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
+    <id>http://crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
     <content type="html"><![CDATA[<p>前回からの続き。</p>
 
 <p>今回は、アップロードしたファイルを表示できるようにする。<br/>
@@ -634,9 +676,9 @@ Rails 3.2.1</code></pre>
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。 その3]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
     <updated>2011-08-04T21:41:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
+    <id>http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
     <content type="html"><![CDATA[<p>前回からの続き。<br/>
 今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
 
@@ -778,9 +820,9 @@ DB に格納後ファイル一覧のページに redirect するように記述�
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。その2]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
     <updated>2011-07-17T00:00:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
+    <id>http://crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
     <content type="html"><![CDATA[<p>昨日に引き続き更新。<br/>
 今回は、ファイルアップロード時に元ファイルと同じ名前でサーバに保存できるようにする。</p>
 
@@ -865,9 +907,9 @@ DB に格納後ファイル一覧のページに redirect するように記述�
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
     <updated>2011-07-16T21:17:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
+    <id>http://crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
     <content type="html"><![CDATA[<p>久々の更新。<br/>
 大学のとある講義で Grails を使った Webアプリケーションを作ることになりまして、
 その作業のログと得た知識の整理を兼ねてブログを更新してみたり。</p>
@@ -978,9 +1020,9 @@ class UploaderController {
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 3日目 (sendmail, chkconfig)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
     <updated>2010-09-13T21:05:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
     <content type="html"><![CDATA[<p>初日みたいに丸１日作業というのは、当分なさそうな雰囲気&#8230;。<br/>
 なので、細かい作業をまとめて記録って感じになるかな。</p>
 
@@ -1058,9 +1100,9 @@ yum-cron        0:off   1:off   2:on    3:on    4:on    5:on    6:off</code></pr
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 2日目 (samba, SWAT)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
     <updated>2010-09-09T20:54:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
     <content type="html"><![CDATA[<p>ファイルサーバ構築が、一段落？したので作業ログをまとめときます。</p>
 
 <!-- more -->
@@ -1201,9 +1243,9 @@ startsmbfilepwent_internal: file /etc/samba/smbpasswd did not exist. File succes
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 1日目 (Network, SELinux)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
     <updated>2010-09-07T20:31:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
     <content type="html"><![CDATA[<p>今日からサーバ構築をはじめてみました。<br/>
 OSは、結構前に CentOS 5.5 をインストールしてたので、今日は、初期設定とファイルサーバの構築を目標に作業を開始。</p>
 

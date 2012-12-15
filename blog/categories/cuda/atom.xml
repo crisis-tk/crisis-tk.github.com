@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: CUDA | crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/blog/categories/cuda/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/blog/categories/cuda/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[CUDA 4.2 インストール ~ サンプルコード作成/実行]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
     <updated>2012-07-01T15:27:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
+    <id>http://crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
     <content type="html"><![CDATA[<p>手持ちの MacBook に CUDA を入れてみる。動作環境は下の通り。</p>
 
 <ul>

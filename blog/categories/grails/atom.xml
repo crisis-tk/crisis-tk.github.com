@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: grails | crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/blog/categories/grails/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/blog/categories/grails/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。 その4]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
     <updated>2011-09-05T22:01:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
+    <id>http://crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
     <content type="html"><![CDATA[<p>前回からの続き。</p>
 
 <p>今回は、アップロードしたファイルを表示できるようにする。<br/>
@@ -95,9 +95,9 @@ def list = {
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。 その3]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
     <updated>2011-08-04T21:41:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
+    <id>http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
     <content type="html"><![CDATA[<p>前回からの続き。<br/>
 今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
 
@@ -252,9 +252,9 @@ DB に格納後ファイル一覧のページに redirect するように記述�
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。その2]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
     <updated>2011-07-17T00:00:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
+    <id>http://crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
     <content type="html"><![CDATA[<p>昨日に引き続き更新。<br/>
 今回は、ファイルアップロード時に元ファイルと同じ名前でサーバに保存できるようにする。</p>
 
@@ -342,9 +342,9 @@ def upload = {
   
   <entry>
     <title type="html"><![CDATA[grails で uploader を作る。]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
+    <link href="http://crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
     <updated>2011-07-16T21:17:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
+    <id>http://crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
     <content type="html"><![CDATA[<p>久々の更新。<br/>
 大学のとある講義で Grails を使った Webアプリケーションを作ることになりまして、
 その作業のログと得た知識の整理を兼ねてブログを更新してみたり。</p>

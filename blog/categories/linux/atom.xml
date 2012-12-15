@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: linux | crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/blog/categories/linux/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 3日目 (sendmail, chkconfig)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
     <updated>2010-09-13T21:05:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
     <content type="html"><![CDATA[<p>初日みたいに丸１日作業というのは、当分なさそうな雰囲気...。<br/>
 なので、細かい作業をまとめて記録って感じになるかな。</p>
 
@@ -95,9 +95,9 @@ yum-cron        0:off   1:off   2:on    3:on    4:on    5:on    6:off</code></pr
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 2日目 (samba, SWAT)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
     <updated>2010-09-09T20:54:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
     <content type="html"><![CDATA[<p>ファイルサーバ構築が、一段落？したので作業ログをまとめときます。</p>
 
 <!-- more -->
@@ -274,9 +274,9 @@ startsmbfilepwent_internal: file /etc/samba/smbpasswd did not exist. File succes
   
   <entry>
     <title type="html"><![CDATA[サーバ構築 1日目 (Network, SELinux)]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
+    <link href="http://crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
     <updated>2010-09-07T20:31:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
+    <id>http://crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
     <content type="html"><![CDATA[<p>今日からサーバ構築をはじめてみました。<br/>
 OSは、結構前に CentOS 5.5 をインストールしてたので、今日は、初期設定とファイルサーバの構築を目標に作業を開始。</p>
 

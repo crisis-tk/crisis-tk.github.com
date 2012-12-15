@@ -1,59 +1,59 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1/</loc>
+        <loc>http://crisis-tk.github.com/blog/2010/09/07/server-settings-part1/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/</loc>
+        <loc>http://crisis-tk.github.com/blog/2010/09/09/server-settings-part2/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3/</loc>
+        <loc>http://crisis-tk.github.com/blog/2010/09/13/server-settings-part3/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/</loc>
+        <loc>http://crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/</loc>
+        <loc>http://crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/</loc>
+        <loc>http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/</loc>
+        <loc>http://crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/</loc>
+        <loc>http://crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2012/06/10/hello/</loc>
+        <loc>http://crisis-tk.github.com/blog/2012/06/12/octpress-intro/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro/</loc>
+        <loc>http://crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/</loc>
+        <loc>http://crisis-tk.github.com/blog/2012/07/01/cuda-install/</loc>
         <lastmod>2012-12-15T12:30:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/2012/07/01/cuda-install/</loc>
-        <lastmod>2012-12-15T12:30:42+09:00</lastmod>
+        <loc>http://crisis-tk.github.com/blog/2012/12/15/change-octpress-theme/</loc>
+        <lastmod>2012-12-15T17:45:39+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/blog/archives/</loc>
-        <lastmod>2012-12-15T12:30:42+09:00</lastmod>
+        <loc>http://crisis-tk.github.com/blog/archives/</loc>
+        <lastmod>2012-12-15T17:45:39+09:00</lastmod>
     </url>
     <url>
-        <loc>http:// crisis-tk.github.com/</loc>
-        <lastmod>2012-12-15T12:30:42+09:00</lastmod>
+        <loc>http://crisis-tk.github.com/</loc>
+        <lastmod>2012-12-15T17:45:39+09:00</lastmod>
     </url>
 </urlset>

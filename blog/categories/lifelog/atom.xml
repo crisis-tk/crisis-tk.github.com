@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: lifelog | crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/blog/categories/lifelog/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/blog/categories/lifelog/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -14,10 +14,61 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Octopress のテーマを変更してみる]]></title>
+    <link href="http://crisis-tk.github.com/blog/2012/12/15/change-octpress-theme/"/>
+    <updated>2012-12-15T15:37:00+09:00</updated>
+    <id>http://crisis-tk.github.com/blog/2012/12/15/change-octpress-theme</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/shashankmehta/greyshade">shashankmehta / greyshade</a> という Octopress の良さげなテーマを発見したので変更してみる。</p>
+
+<!-- more -->
+
+
+<h2>インストール</h2>
+
+<p>README に書かれてあるとおりに実行していく。</p>
+
+<pre><code>$ git clone git@github.com:shashankmehta/greyshade.git .themes/greyshade
+$ echo "\$greyshade: color;" &gt;&gt; sass/custom/_colors.scss 
+$ rake install\['greyshade'\]
+$ rake generate
+</code></pre>
+
+<p>zsh の場合は <code>[...]</code> を <code>\[...\]</code> に変更しないと実行できないので注意。</p>
+
+<h2>プロフィール画像の設定</h2>
+
+<p>プロフィール画像を用意してないと, 折角のオサレテーマがダサくなっちゃうので用意する。<br/>
+画像は source/images/ に dp.jpg という名前で配置するといいみたい。</p>
+
+<pre><code>$ cp ~/Picture/{profile_picture}.jpg source/images/dp.jpg
+</code></pre>
+
+<h2>確認 &amp; デプロイ！</h2>
+
+<p>GitHub Pages にデプロイする前にプレビューで確認して, 問題なければデプロイ！</p>
+
+<pre><code>$ rake preview
+$ rake gen_deploy
+</code></pre>
+
+<p>できてるよね？</p>
+
+<p>source を bitbucket で管理してる場合は push を忘れずに...。</p>
+
+<pre><code>$ git add -A
+$ git commit -m "Octopress のテーマを変更！"
+$ git push -u bitbucket source
+</code></pre>
+
+<p>今回適用した Greyshade の他にも <a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a> にオサレなテーマがまとめられていました。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[octpress はじめました。]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
     <updated>2012-06-12T12:15:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
+    <id>http://crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
     <content type="html"><![CDATA[<p>今まで日々の作業記録は Evernote に取ってたのですが, ふとブログ書きたいと思いまして, <a href="http://pages.github.com/">Github Pages</a> と <a href="http://octopress.org/">Octpress</a> を利用してブログを構築してみました。</p>
 
 <p>今回は, はてなダイアリーから記事の移行と Github Pages + Octpress でブログ公開までの流れをまとめました。</p>

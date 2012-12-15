@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ruby, | crisis.tk's blog]]></title>
-  <link href="http:// crisis-tk.github.com/blog/categories/ruby-/atom.xml" rel="self"/>
-  <link href="http:// crisis-tk.github.com/"/>
-  <updated>2012-12-15T13:24:34+09:00</updated>
-  <id>http:// crisis-tk.github.com/</id>
+  <link href="http://crisis-tk.github.com/blog/categories/ruby-/atom.xml" rel="self"/>
+  <link href="http://crisis-tk.github.com/"/>
+  <updated>2012-12-15T17:48:26+09:00</updated>
+  <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Apache + Passenger で Sinatra アプリを動かす]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
     <updated>2012-06-14T21:09:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
+    <id>http://crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
     <content type="html"><![CDATA[<p>Apache上で Sinatra を動かしたい(= デプロイしたい?) 場合, Passenger とやらを使うと簡単らしいのでインストールしてみた。</p>
 
 <p>導入環境</p>
@@ -120,9 +120,9 @@ RackBaseURI /hello-world
   
   <entry>
     <title type="html"><![CDATA[Ruby on Rails 環境の導入]]></title>
-    <link href="http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/"/>
+    <link href="http://crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/"/>
     <updated>2012-02-20T22:08:00+09:00</updated>
-    <id>http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro</id>
+    <id>http://crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro</id>
     <content type="html"><![CDATA[<p>CentOS 5.5 に Ruby on Rails 環境を導入する。</p>
 
 <ul>
