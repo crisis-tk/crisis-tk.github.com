@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: linux | crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 3日目 (sendmail, chkconfig)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
+    <updated>2010-09-13T21:05:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
+    <content type="html"><![CDATA[<p>初日みたいに丸１日作業というのは、当分なさそうな雰囲気...。<br/>
+なので、細かい作業をまとめて記録って感じになるかな。</p>
+
+<p>今回は必要ないサービスは止めておけ！というお話。</p>
+
+<!-- more -->
+
+
+<h2>不要なデーモンを止める！</h2>
+
+<p>Samba の設定を少し変更 -> 再起動したら、起動がものすごく遅い（；゜Д゜）</p>
+
+<p>仕方なく直接モニター繋いでみると、OS起動中？デーモン起動中？のとこで sendmail とか言うデーモンが、名前解決？しようと頑張ってました...。<br/>
+そこら辺は勉強不足でよく分からないのですが、取り敢えず、「不要なデーモンは止めとけ！」ということらしく、
+<a href="http://afexcel.seesaa.net/article/93682438.html">CentOS 5.1 インストール後の設定（不要なサービスを止める）</a>
+を参考に、不要なデーモンを起動しないように設定。</p>
+
+<p><div>
+  <pre><code class='zsh'>[root@centos ~] # chkconfig nfslock off
+[root@centos ~] # chkconfig portmap off
+[root@centos ~] # chkconfig bluetooth off
+[root@centos ~] # chkconfig ip6tables off
+[root@centos ~] # chkconfig auditd off
+[root@centos ~] # chkconfig mcstrans off
+[root@centos ~] # chkconfig restorecond off
+[root@centos ~] # chkconfig cups off
+[root@centos ~] # chkconfig mdmonitor off
+[root@centos ~] # chkconfig gpm off
+[root@centos ~] # chkconfig pcscd off</code></pre>
+</div>
+</p>
+
+<p>んで、再起動。</p>
+
+<p><div>
+  <pre><code class='zsh'>[root@centos ~] # chkconfig --list | grep 3:on
+acpid           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+anacron         0:off   1:off   2:on    3:on    4:on    5:on    6:off
+apmd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+atd             0:off   1:off   2:off   3:on    4:on    5:on    6:off
+autofs          0:off   1:off   2:off   3:on    4:on    5:on    6:off
+avahi-daemon    0:off   1:off   2:off   3:on    4:on    5:on    6:off
+cpuspeed        0:off   1:on    2:on    3:on    4:on    5:on    6:off
+crond           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+haldaemon       0:off   1:off   2:off   3:on    4:on    5:on    6:off
+hidd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+iptables        0:off   1:off   2:on    3:on    4:on    5:on    6:off
+irqbalance      0:off   1:off   2:on    3:on    4:on    5:on    6:off
+kudzu           0:off   1:off   2:off   3:on    4:on    5:on    6:off
+lvm2-monitor    0:off   1:on    2:on    3:on    4:on    5:on    6:off
+messagebus      0:off   1:off   2:off   3:on    4:on    5:on    6:off
+microcode_ctl   0:off   1:off   2:on    3:on    4:on    5:on    6:off
+netfs           0:off   1:off   2:off   3:on    4:on    5:on    6:off
+network         0:off   1:off   2:on    3:on    4:on    5:on    6:off
+rawdevices      0:off   1:off   2:off   3:on    4:on    5:on    6:off
+readahead_early 0:off   1:off   2:on    3:on    4:on    5:on    6:off
+rpcgssd         0:off   1:off   2:off   3:on    4:on    5:on    6:off
+rpcidmapd       0:off   1:off   2:off   3:on    4:on    5:on    6:off
+smartd          0:off   1:off   2:on    3:on    4:on    5:on    6:off
+smb             0:off   1:off   2:on    3:on    4:on    5:on    6:off
+sshd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+syslog          0:off   1:off   2:on    3:on    4:on    5:on    6:off
+xfs             0:off   1:off   2:on    3:on    4:on    5:on    6:off
+xinetd          0:off   1:off   2:off   3:on    4:on    5:on    6:off
+yum-cron        0:off   1:off   2:on    3:on    4:on    5:on    6:off</code></pre>
+</div>
+</p>
+
+<p>今のところ起動してるデーモンはこんな感じ。まだまだ、不要なものもあるだろうけど、使ってるか使ってないか曖昧なものは残してます。</p>
+
+<p>先週の作業はこんなもんかな。
+他にあったら便利な機能？サーバ？無いかなーと模索中...なんか無いかなー。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 2日目 (samba, SWAT)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
+    <updated>2010-09-09T20:54:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
+    <content type="html"><![CDATA[<p>ファイルサーバ構築が、一段落？したので作業ログをまとめときます。</p>
+
+<!-- more -->
+
+
+<h2>samba &amp; SWAT のインストール</h2>
+
+<p>最初に samba と samba を GUI で設定するためのツール SWAT のインストール！</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;yum -y install samba&lt;/h1&gt;
+
+&lt;h1&gt;yum -y install samba-swat&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<h2>SWAT の設定</h2>
+
+<p>SWAT の設定ファイルを編集。<br/>
+11行目の only_from に内部ネットワークアドレス（192.168.0.0/24）を追加。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;vim /etc/xinetd.d/swat&lt;/h1&gt;
+
+&lt;p&gt;  5 service swat
+  6 {
+  7         disable = no
+  8         port            = 901
+  9         socket_type     = stream
+ 10         wait            = no
+ 11         only_from       = 127.0.0.1 192.168.0.0/24
+ 12         user            = root
+ 13         server          = /usr/sbin/swat
+ 14         log_on_failure  += USERID
+ 15 }</code></pre>
+</div>
+</p>
+
+<p>サーバを起動したときに、自動的に SWAT も起動するように設定。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;chkconfig swat on&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>これで、SWAT の設定は終了。
+あとは「 http://サーバ名（or アドレス）:901 」で、SWAT にアクセスできるか確認。</p>
+
+<p>何故かできない（；゜Д゜）<br/>
+ん～、GUI でできないなら直接 samba の設定ファイルを編集してやる！
+（ファイアウォール設定が問題でした...ここで、気づけばよかったんですが orz）</p>
+
+<h2>samba の設定</h2>
+
+<p>samba にアクセスするユーザを登録。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;pdbedit -a [ユーザ名]&lt;/h1&gt;
+
+&lt;p&gt;new password:
+retype new password:
+startsmbfilepwent_internal: file /etc/samba/smbpasswd did not exist. File successfully created.
+...（以下省略）</code></pre>
+</div>
+</p>
+
+<p>ホームディレクトリ（/home/[ユーザ名]/samba）の作成。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;mkdir /home/[ユーザ名]/samba&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>登録するユーザが多い場合は、
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> にある便利なスクリプトを使うといいかも。</p>
+
+<p>共有ディレクトリの作成。
+どのユーザからでもアクセスできるように、ディレクトリ所有者を変更。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;mkdir /home/samba&lt;/h1&gt;
+
+&lt;h1&gt;chown nobody:nobody /home/samba&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>最後に、samba の設定ファイルを編集。
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> を参考に以下のように、編集・追加した。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;vim /etc/samba/smb.conf&lt;/h1&gt;
+
+&lt;p&gt; 57 [global]
+ 58         unix charset = UTF-8
+ 59         dos charset = CP932
+ 60         display charset = UTF-8
+ 77         workgroup = WORKGROUP
+ 84         hosts allow = 192.168.0. 127.
+224 ;       load printers = yes
+225         load printers = no
+226         disable spoolss = yes
+253 [homes]
+254         comment = Home Directories
+255         path = %H/samba
+256         browseable = no
+257         writable = yes
+296 [public]
+297         comment = Public Stuff
+298         path = /home/samba
+299         public = yes
+300         writable = yes
+301         only guest = yes</code></pre>
+</div>
+</p>
+
+<p>samba の設定は終了。
+あとは、samba を起動して、自動的に起動するように設定。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;/etc/rc.d/init.d/smb start&lt;/h1&gt;
+
+&lt;h1&gt;chkconfig smb on&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>これで、Windows、Mac からサーバ（CentOS）が見えるはずなんだけど見えない！！
+調べてみると、samba サーバは問題ないみたいだし...まさか（；゜Д゜）</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;/etc/rc.d/init.d/iptables stop&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Windows、Mac からサーバ見える！！ SWAT もアクセスできる！！
+うむ。ファイアウォールが問題だったようだ。
+外部に公開しないとはいえ、ファイアウォールを完全に切るのは無用心なので、
+<a href="http://www.nextren.com/okamoto/2007/10/centos5_samba.html">CentOS5 で Samba 設定</a>
+を参考にファイアウォールの設定（901の許可も忘れずに...）。</p>
+
+<p>取り敢えず、ファイルサーバ構築終わり～
+あとは、SWAT でもう少し設定するくらい。今度は何をやろうかな。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 1日目 (Network, SELinux)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
+    <updated>2010-09-07T20:31:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
+    <content type="html"><![CDATA[<p>今日からサーバ構築をはじめてみました。<br/>
+OSは、結構前に CentOS 5.5 をインストールしてたので、今日は、初期設定とファイルサーバの構築を目標に作業を開始。</p>
+
+<!-- more -->
+
+
+<h2>固定IPの設定</h2>
+
+<p>調べてみると、OSをインストールするときに固定IPの設定できるみたい。<br/>
+と言っても既にインストールしてるので、別の方法で設定することに...。
+そんなに難しくなくて、ifconfig コマンドで、IPアドレスやらを確認して、</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;vim /etc/sysconfig/network-scripts/ifcfg-eth0&lt;/h1&gt;
+
+&lt;p&gt;DEVICE=eth0
+ONBOOT=yes
+IPADDR=192.168.0.12
+NETMASK=255.255.255.0
+BROADCAST=192.168.0.255</code></pre>
+</div>
+</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;vim /etc/sysconfig/network&lt;/h1&gt;
+
+&lt;p&gt;NETWORKING=yes
+NETWORKING_IPV6=no
+HOSTNAME=centos.localdomain
+GATEWAY=192.168.0.1</code></pre>
+</div>
+</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;vim /etc/resolv.conf&lt;/h1&gt;
+
+&lt;p&gt;search localdomain
+nameserver 192.168.0.1</code></pre>
+</div>
+</p>
+
+<p>最後に、ネットワークの再起動をして設定出来ているか確認。</p>
+
+<p><div>
+  <pre><code class='zsh'>&lt;/p&gt;
+
+&lt;h1&gt;sudo /etc/init.d/network restart&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>特に異常がなければ、これで固定IPの設定は終了～</p>
+
+<h2>yum の初期設定, SELinux の無効化</h2>
+
+<p>ここからは、<a href="http://centossrv.com/centos5-init.shtml">CentOS5初期設定 - CentOSで自宅サーバー構築</a> を参考に作業しました。<br/>
+作業内容は、上記サイトで詳しく説明されてるので...割愛（手抜きｗ）<br/>
+いずれ使うということで、yum コマンドについての覚え書きを少し。</p>
+
+<p><div>
+  <pre><code class='tcsh'>&lt;/p&gt;
+
+&lt;h1&gt;yum check-update          ;; アップデート可能なパッケージ一覧&lt;/h1&gt;
+
+&lt;h1&gt;yum update                ;; アップデート可能なパッケージを一括アップデート&lt;/h1&gt;
+
+&lt;h1&gt;yum list                  ;; インストール可能なパッケージ一覧&lt;/h1&gt;
+
+&lt;h1&gt;yum list installed        ;; インストール済みのパッケージ一覧&lt;/h1&gt;
+
+&lt;h1&gt;yum search キーワード     ;; パッケージの検索&lt;/h1&gt;
+
+&lt;h1&gt;yum install パッケージ名  ;; パッケージのインストール&lt;/h1&gt;
+
+&lt;h1&gt;yum remove パッケージ名   ;; パッケージのアンインストール&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>ファイルサーバ（samba）のほうは、PC（win, mac）の両方から見えるようにはできましたが、
+まだ未完成なので、作業ログは次回書きたいと思います。</p>
+]]></content>
+  </entry>
+  
+</feed>

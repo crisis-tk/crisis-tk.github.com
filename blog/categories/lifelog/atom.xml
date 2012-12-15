@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: lifelog | crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/blog/categories/lifelog/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[octpress はじめました。]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
+    <updated>2012-06-12T12:15:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
+    <content type="html"><![CDATA[<p>今まで日々の作業記録は Evernote に取ってたのですが, ふとブログ書きたいと思いまして, <a href="http://pages.github.com/">Github Pages</a> と <a href="http://octopress.org/">Octpress</a> を利用してブログを構築してみました。</p>
+
+<p>今回は, はてなダイアリーから記事の移行と Github Pages + Octpress でブログ公開までの流れをまとめました。</p>
+
+<!-- more -->
+
+
+<h2>記事の移行</h2>
+
+<p>はじめに, はてなダイアリーの記事を <code>はてなの日記データ形式</code> という形式でエクスポートしておく。
+(管理画面から [データ管理] → はてなの日記データ形式 の項目 [ダウンロード] からエクスポートできる)</p>
+
+<p><code>はてな記法</code> で書かれた記事から <code>Markdown形式</code> への変換は,
+ <a href="http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown">一生涯はてな記法しますか？それともMarkdownしますか？</a> の記事で紹介されていた Rubyライブラリ <code>hateda2md</code> を利用した。</p>
+
+<p>こんな感じのコードで変換できた。</p>
+
+<p>```ruby</p>
+
+<h1>-<em>- coding: utf-8 -</em>-</h1>
+
+<p>require 'hateda2md'</p>
+
+<p>mdb = HateDa::MdBuilder.new('crisis_tk.xml')</p>
+
+<p>filters = mdb.pre_defined_filters
+filters.each {|f| mdb.set f }</p>
+
+<p>mdb.run
+mdb.save_to_files
+```</p>
+
+<h2>Github Pages + Octpress 環境構築</h2>
+
+<p>Github Pages + Octpress の環境構築は、</p>
+
+<ul>
+<li><a href="http://octopress.org/docs/">公式ドキュメント</a></li>
+<li><a href="http://tokkonopapa.github.com/blog/2011/12/30/octopress-on-github-and-bitbucket/">Octopressのインストールから運用管理まで - T.I.D.</a></li>
+<li><a href="http://hnakamur.github.com/blog/2012/03/03/how-to-setup-octopress/">octopressでgithubにブログ開設 - hnakamur's blog at github</a></li>
+</ul>
+
+
+<p>にすごく丁寧にまとめられていました。</p>
+
+<h2>記事を書く</h2>
+
+<p>新しい記事の作成。title がそのまま URL になるので日本語は使えないみたい。</p>
+
+<pre><code>rake new_post\['title'\]
+</code></pre>
+
+<p>上のコマンドを実行すると以下のようなファイルができるので, それを適当なエディタで編集。</p>
+
+<pre><code>emacs -nw source/_posts/2012-06-12-title.markdown
+</code></pre>
+
+<p>記事を書いたら次のコマンドを実行して記事の確認。
+http://localhost:4000 にアクセスすると記事のプレビューを見ることができる。</p>
+
+<pre><code>rake generate
+rake preview
+</code></pre>
+
+<p>次のコマンドで github にプッシュされて, crisis-tk.github.com に記事が公開される。</p>
+
+<pre><code>rake deploy
+</code></pre>
+
+<h2>感想的ななにか</h2>
+
+<p>導入がすごく簡単！好きなエディタで書けるのもいいね！
+基本的な Markdown記法さえ覚えればサクサク書ける感じなので暫く使ってみるかな。</p>
+]]></content>
+  </entry>
+  
+</feed>

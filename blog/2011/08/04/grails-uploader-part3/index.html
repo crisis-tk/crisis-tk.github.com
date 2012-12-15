@@ -1,0 +1,284 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>grails で uploader を作る。 その3 - crisis.tk's blog</title>
+	<meta name="author" content="Kouta TOUME">
+
+	
+	<meta name="description" content="前回からの続き。
+今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。 DB の環境設定 はじめに、使う DB を MySQL に変更する。 DB を変更するために、conf/DataSource.groovy を編集する。
+その前に、grails で使うための DB &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="crisis.tk's blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+</div>
+<h1><a href="/">crisis.tk's blog</a></h1>
+<p class="subtitle">Ruby, Sinatra, GPGPU とか...</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/crisis_tk" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/crisis-tk" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post">
+	<h1 class="title">grails で uploader を作る。 その3</h1>
+	<div class="entry-content"><p>前回からの続き。<br/>
+今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
+
+<!-- more -->
+
+
+<h2>DB の環境設定</h2>
+
+<p>はじめに、使う DB を MySQL に変更する。</p>
+
+<p>DB を変更するために、<code>conf/DataSource.groovy</code> を編集する。<br/>
+その前に、grails で使うための DB をあらかじめ作っておくのと、
+Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
+
+<div>
+  <pre><code class='groovy'>dataSource {
+    pooled = true
+    driverClassName = &quot;com.mysql.jdbc.Driver&quot;
+    username = &quot;ユーザネーム&quot;
+    password = &quot;パスワード&quot;
+}
+...
+environments {
+    development {
+        dataSource {
+            dbCreate = &quot;update&quot;
+            url = &quot;jdbc:mysql://localhost/データベース名&quot;
+        }
+        ...
+    }
+    ...
+}</code></pre>
+</div>
+
+
+<p>これで、Grails から MySQL を使うことができる。</p>
+
+<h2>domain の作成</h2>
+
+<p>まず、ドメインクラスを作成する。</p>
+
+<div>
+  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
+</div>
+
+
+<p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
+このファイルにテーブルのフィールド情報等を記述していく。</p>
+
+<p>今回はアップロードしたファイルの情報を DB に格納するので、</p>
+
+<ul>
+<li>String title</li>
+<li>String summary</li>
+<li>String filename</li>
+<li>Date dateCreated</li>
+<li>Date lastUpdated</li>
+</ul>
+
+
+<p>を定義する。</p>
+
+<p>また、今回のようにアップロードされたファイルの名前を DB に格納する場合、次のような制約を記述する必要があるらしい。
+（参照：<a href="http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html">ファイルのアップロードと Atom の配信</a>）</p>
+
+<pre><code>filename(blank:true, nullable:true)
+</code></pre>
+
+<p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
+
+<div>
+  <pre><code class='groovy'>class Uploader {
+    static constraints = {
+        title()
+        summary(maxSize:1000)
+        filename(blank:true, nullable:true)
+        dateCreated()
+        lastUpdated()
+    }
+    static mapping = {
+        sort &quot;lastUpdated&quot;:&quot;desc&quot;
+    }
+    String title
+    String summary
+    String filename
+    Date dateCreated
+    Date lastUpdated
+}</code></pre>
+</div>
+
+
+<p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
+<code>static mapping = {}</code> には、主キー/複合キー等の設定や、今回のようにソート条件などを記述。<br/>
+以上で、DB の設定と準備は終了。</p>
+
+<h2>controller の編集</h2>
+
+<p>前回作った controller を編集していく。</p>
+
+<p>upload アクションに、form 入力された値（これは全て params にまとめられてる）を持つインスタンスを作成。
+インスタンスを作成したら、</p>
+
+<ul>
+<li><code>hasErrors()</code> メソッド：インスタンスがきちんと作られているかチェック。</li>
+<li><code>save()</code> メソッド：DB に保存</li>
+</ul>
+
+
+<p>といったメソッドを使ってエラー処理、DB書込みを行う。</p>
+
+<p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
+これらをまとめると、以下のような感じになる。</p>
+
+<div>
+  <pre><code class='groovy'>class UploaderController {
+    ....
+    def upload = {
+        def upParam = new Uploader(params)
+        ...
+        if (!file.empty) {
+            ...
+            f.transferTo(new File('data/'+file.originalFilename))
+            upParam.filename = file.originalFilename
+        }
+        if (!upParam.hasErrors() &amp;&amp; upParam.save()) {
+        }</code></pre>
+</div>
+
+
+<p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>
+
+<p>今回はファイルの情報を DB に格納するための処理を追加しただけなので、ファイル送信後のページは相変わらず真っ白なページ&#8230;。
+DB に格納後ファイル一覧のページに redirect するように記述するとエラーでるんですよね。なんでだろ？</p>
+
+<p>ファイルアップロード → DB書込み → ファイルの表示 ができるとアップローダらしくなるんだけどな。
+この辺りはもう少し時間がかかりそう。</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2012
+
+    Kouta TOUME
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'crisis-tk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/';
+        var disqus_url = 'http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-33089706-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+		</div>
+	</div>
+</body>
+</html>

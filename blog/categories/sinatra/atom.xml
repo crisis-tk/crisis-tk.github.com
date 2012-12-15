@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: sinatra | crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/blog/categories/sinatra/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Apache + Passenger で Sinatra アプリを動かす]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
+    <updated>2012-06-14T21:09:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
+    <content type="html"><![CDATA[<p>Apache上で Sinatra を動かしたい(= デプロイしたい?) 場合, Passenger とやらを使うと簡単らしいのでインストールしてみた。</p>
+
+<p>導入環境</p>
+
+<ul>
+<li>Mac OS X 10.7.4</li>
+<li>Apache 2.2.21</li>
+<li>ruby 1.9.2p290</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>Passenger のインストール</h2>
+
+<pre><code>% gem install passenger
+% rbenv rehash
+% passenger-install-apache2-module
+</code></pre>
+
+<p>rbenv を使ってないなら <code>rbenv rehash</code> は必要ない。<br/>
+インストールが上手くいくと,</p>
+
+<pre><code>Please edit your Apache configuration file, and add these lines:
+
+    LoadModule passenger_module /Users/crisis_tk/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/passenger-3.0.12/ext/apache2/mod_passenger.so
+    PassengerRoot /Users/crisis_tk/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/passenger-3.0.12
+    PassengerRuby /Users/crisis_tk/.rbenv/versions/1.9.2-p290/bin/ruby
+</code></pre>
+
+<p>こんな感じのメッセージが表示されるので, apache のコンフィグファイルに上記の三行を追加する。</p>
+
+<p>自分の環境だと <code>/private/etc/apache2/other/*.conf</code> も include してくれるみたいだったので,<br/>
+以下のようなファイルを作った。</p>
+
+<pre><code>/private/etc/apache2/other/passenger.conf
+</code></pre>
+
+<p>ここまでで Passenger のインストールは終わり。</p>
+
+<h2>Sinatra アプリの準備</h2>
+
+<p>Sinatra アプリを Apache + Passenger な環境で動かすためには, 以下のようなディレクトリ構成にする必要がある.</p>
+
+<pre><code>sinatra
+├── app.rb
+├── config.ru
+├── public/
+└── tmp/
+</code></pre>
+
+<p><code>app.rb</code> は Sinatra アプリ本体。中身は省略！<br/>
+<code>config.ru</code> ファイルは Passenger が Sinatra アプリを動かす際に必要なファイルだとか。<br/>
+ファイルの中身は以下のような感じ。</p>
+
+<p><code>ruby
+require './app'
+run Sinatra::Application
+</code></p>
+
+<p><code>public</code> と <code>tmp</code> フォルダは空のフォルダでよい。
+画像ファイル, Scriptファイルがあれば publicフォルダに入れる感じ。</p>
+
+<p>これで Sinatra アプリの準備は終わり。</p>
+
+<h2>Apache の設定</h2>
+
+<p>と言ってもほとんどすることはない。
+サブドメインで実行できるように DocumentRoot にシンボリックリンクをはる。</p>
+
+<p>Mac だと DocumentRoot は <code>/Library/WebServer/Documents/</code> らしいので,</p>
+
+<pre><code>% sudo ln -s /Users/crisis_tk/sinatra/public /Library/WebServer/Documents/hello-world
+</code></pre>
+
+<p>こんな感じでオッケー。
+あとは, Apache のコンフィグファイルに次の一行を追加！</p>
+
+<pre><code>% cat /private/etc/apache2/users/crisis_tk.conf
+...
+RackBaseURI /hello-world
+...
+</code></pre>
+
+<p>そんでもって最後に Apache の再起動。
+これで http://your.domain.name/hello-world/ で動いてるはず。<br/>
+最後の <code>/</code> を忘れると動かないことがあるので注意が必要。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/foosin/20090619/1245426335">sinatraアプリなどをapache/passenger/mod_railsで動かす - だるろぐ跡地</a></li>
+<li><a href="http://d.hatena.ne.jp/shokai/20100506/1273174669">passengerでsinatraアプリをサブディレクトリで実行する - 橋本詳解</a></li>
+<li><a href="http://d.hatena.ne.jp/shinking/20100313/1268491701">sinatraを動かす - shinkingの日記</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

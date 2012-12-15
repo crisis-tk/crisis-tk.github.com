@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: grails | crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/blog/categories/grails/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。 その4]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
+    <updated>2011-09-05T22:01:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
+    <content type="html"><![CDATA[<p>前回からの続き。</p>
+
+<p>今回は、アップロードしたファイルを表示できるようにする。<br/>
+具体的には、音楽ファイルをアップロードしたら、HTML5 Audioタグを用いて再生できるような機能を実装する。</p>
+
+<!-- more -->
+
+
+<h2>Controller を編集</h2>
+
+<p>DB に格納されたファイル情報を基に、アップロードされたファイルの表示をする。
+そのため、DB からレコード一覧を取得する処理を Controller に記述。</p>
+
+<p><div>
+  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+def upload = {
+    ...
+}
+def list = {
+    [tableData: Uploader.list()]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p>前回ドメインクラスとして Uploader を定義したので、<code>list()</code> メソッドを呼び出すだけでレコード一覧を取得することができる。
+取得したレコード一覧を <code>tableData</code> に設定すると、view 側で <code>tableData</code> から自由にレコードを取り出すことができる。</p>
+
+<h2>View の作成</h2>
+
+<p>tableData は配列（連想配列？）の形で渡されるので、<code>&lt;g:each&gt;</code> タグを使って要素を 1つずつ取り出して表示させる。<br/>
+具体的には次のように記述した。</p>
+
+<p><div>
+  <pre><code class='gsp'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;list&quot;&amp;gt;
+    &amp;lt;g:each in=&quot;${tableData}&quot; status=&quot;i&quot; var=&quot;record&quot;&amp;gt;
+        &amp;lt;p&amp;gt;${record.filename}&amp;lt;/p&amp;gt;
+        &amp;lt;g:if test=&quot;${record.filename}&quot;&amp;gt;
+            &amp;lt;p&amp;gt;
+                &amp;lt;audio src=&quot;${createLinkTo(dir:'data/', file:''+record.filename)}&quot; controls&amp;gt;
+                &amp;lt;/audio&amp;gt;
+            &amp;lt;/p&amp;gt;
+        &amp;lt;/g:if&amp;gt;
+    &amp;lt;/g:each&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>grailsタグの意味は、それぞれ以下の通り。</p>
+
+<ul>
+<li><code>&lt;g:each&gt;</code> タグ：配列から要素を 1つずつ取り出す</li>
+<li><code>&lt;g:if&gt;</code>タグ：ファイルが存在するかの判定</li>
+<li><code>createLinkTo()</code> メソッド：ファイルへのリンクを生成</li>
+</ul>
+
+
+<p>以上で、アップロードしたファイルを表示/再生することができる。</p>
+
+<p>今回は、HTML5 Audioタグを使っているので音楽ファイルがアップロードされていれば、音楽ファイルを再生することができる。</p>
+
+<p>Grails を初めて使ってみたけど、結構楽に基本的なアップローダの機能は実装できたと思う。
+まだまだ、MVCな考え方に慣れてないので、もう少し Grails 触ってみようかなと思ったり思わなかったり...。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。 その3]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
+    <updated>2011-08-04T21:41:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
+    <content type="html"><![CDATA[<p>前回からの続き。<br/>
+今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
+
+<!-- more -->
+
+
+<h2>DB の環境設定</h2>
+
+<p>はじめに、使う DB を MySQL に変更する。</p>
+
+<p>DB を変更するために、<code>conf/DataSource.groovy</code> を編集する。<br/>
+その前に、grails で使うための DB をあらかじめ作っておくのと、
+Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
+
+<p><div>
+  <pre><code class='groovy'>dataSource {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pooled = true
+driverClassName = &quot;com.mysql.jdbc.Driver&quot;
+username = &quot;ユーザネーム&quot;
+password = &quot;パスワード&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}
+...
+environments {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;development {
+    dataSource {
+        dbCreate = &quot;update&quot;
+        url = &quot;jdbc:mysql://localhost/データベース名&quot;
+    }
+    ...
+}
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p>これで、Grails から MySQL を使うことができる。</p>
+
+<h2>domain の作成</h2>
+
+<p>まず、ドメインクラスを作成する。</p>
+
+<p><div>
+  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
+</div>
+</p>
+
+<p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
+このファイルにテーブルのフィールド情報等を記述していく。</p>
+
+<p>今回はアップロードしたファイルの情報を DB に格納するので、</p>
+
+<ul>
+<li>String title</li>
+<li>String summary</li>
+<li>String filename</li>
+<li>Date dateCreated</li>
+<li>Date lastUpdated</li>
+</ul>
+
+
+<p>を定義する。</p>
+
+<p>また、今回のようにアップロードされたファイルの名前を DB に格納する場合、次のような制約を記述する必要があるらしい。
+（参照：<a href="http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html">ファイルのアップロードと Atom の配信</a>）</p>
+
+<pre><code>filename(blank:true, nullable:true)
+</code></pre>
+
+<p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
+
+<p><div>
+  <pre><code class='groovy'>class Uploader {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static constraints = {
+    title()
+    summary(maxSize:1000)
+    filename(blank:true, nullable:true)
+    dateCreated()
+    lastUpdated()
+}
+static mapping = {
+    sort &quot;lastUpdated&quot;:&quot;desc&quot;
+}
+String title
+String summary
+String filename
+Date dateCreated
+Date lastUpdated
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
+<code>static mapping = {}</code> には、主キー/複合キー等の設定や、今回のようにソート条件などを記述。<br/>
+以上で、DB の設定と準備は終了。</p>
+
+<h2>controller の編集</h2>
+
+<p>前回作った controller を編集していく。</p>
+
+<p>upload アクションに、form 入力された値（これは全て params にまとめられてる）を持つインスタンスを作成。
+インスタンスを作成したら、</p>
+
+<ul>
+<li><code>hasErrors()</code> メソッド：インスタンスがきちんと作られているかチェック。</li>
+<li><code>save()</code> メソッド：DB に保存</li>
+</ul>
+
+
+<p>といったメソッドを使ってエラー処理、DB書込みを行う。</p>
+
+<p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
+これらをまとめると、以下のような感じになる。</p>
+
+<p><div>
+  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;....
+def upload = {
+    def upParam = new Uploader(params)
+    ...
+    if (!file.empty) {
+        ...
+        f.transferTo(new File('data/'+file.originalFilename))
+        upParam.filename = file.originalFilename
+    }
+    if (!upParam.hasErrors() &amp;amp;&amp;amp; upParam.save()) {
+    }      
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>
+
+<p>今回はファイルの情報を DB に格納するための処理を追加しただけなので、ファイル送信後のページは相変わらず真っ白なページ...。
+DB に格納後ファイル一覧のページに redirect するように記述するとエラーでるんですよね。なんでだろ？</p>
+
+<p>ファイルアップロード → DB書込み → ファイルの表示 ができるとアップローダらしくなるんだけどな。
+この辺りはもう少し時間がかかりそう。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。その2]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
+    <updated>2011-07-17T00:00:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
+    <content type="html"><![CDATA[<p>昨日に引き続き更新。<br/>
+今回は、ファイルアップロード時に元ファイルと同じ名前でサーバに保存できるようにする。</p>
+
+<!-- more -->
+
+
+<h2>controller の作成</h2>
+
+<p>前回作った controller を編集していく。</p>
+
+<p><code>request.getFile()</code> メソッドでアップロードされたファイルの情報を取得。
+ファイル情報を取得したら以下のメソッドでファイルの情報を取得することが可能と...</p>
+
+<ul>
+<li>class : アップロードしたファイルのクラス名</li>
+<li>name : アップロードしたファイルの名前（オリジナルのファイル名ではない）</li>
+<li>size : アップロードしたファイルのサイズ</li>
+<li>contentType : アップロードしたファイルのタイプ</li>
+<li>originalFilename : アップロードしたファイルのオリジナルの名前</li>
+</ul>
+
+
+<p>調べたら、意外と簡単にできた。<br/>
+あとは、上のメソッドを前回作った controller に追加して...</p>
+
+<p><div>
+  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;....
+def upload = {
+    def file = request.getFile('myFile')
+    if (!file.empty) {
+        println &quot;Class: ${file.class}&quot;
+        println &quot;Name: ${file.name}&quot;
+        println &quot;OriginalFileName: ${file.originalFilename}&quot;
+        println &quot;Size: ${file.size}&quot;
+        println &quot;ContentType: ${file.contentType}&quot;
+        f.transferTo(new File('data/'+file.originalFilename))
+        response.sendError(200, 'Done')
+    }
+    else {
+        flash.message = 'file cannot be empty'
+        redirect(action: index)
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p>こんな感じに編集。これでアップロードしたファイルと同じ名前でサーバに保存される。<br/>
+実行して気づいたのだが、<code>println</code> の行はページに表示されるのではなくてコンソールに出力される。</p>
+
+<h2>実行！</h2>
+
+<p><div>
+  <pre><code class='zsh'>% grails run-app</code></pre>
+</div>
+</p>
+
+<p>前回同様、コマンドを実行して何事も無く起動できたら <a href="http://localhost:8080/gapp">http://localhost:8080/gapp</a> にアクセス。</p>
+
+<p>ファイルを選択して送信...またまた真っ白いページに飛ばされるけれど、
+「data」フォルダにアップロードしたファイルと同じ名前のファイルが ( ´∀｀)bｸﾞｯ!</p>
+
+<p>ファイル送信後の真っ白いページどうにかしろって話ですよね。<br/>
+アップロードしたファイルを表示できたらいいのかな？
+この辺の処理をどう書いていいのかよく分からない。</p>
+
+<p>今回参考にしたページに <code>TagLib</code> ってのを使うとできるって書いてあったのでやってみるかな。</p>
+
+<p>あと、アップロードしたファイルを DB で管理できると今後幸せになりそうなので、
+そこんとこの処理も考えないといけないかも。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://www.servlets.com/cos/javadoc/com/oreilly/servlet/MultipartRequest.html">http://www.servlets.com/cos/javadoc/com/oreilly/servlet/MultipartRequest.html</a></li>
+<li><a href="http://groovy.codehaus.org/api/groovy/lang/GroovyCodeSource.html">http://groovy.codehaus.org/api/groovy/lang/GroovyCodeSource.html</a></li>
+<li><a href="http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html">http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
+    <updated>2011-07-16T21:17:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
+    <content type="html"><![CDATA[<p>久々の更新。<br/>
+大学のとある講義で Grails を使った Webアプリケーションを作ることになりまして、
+その作業のログと得た知識の整理を兼ねてブログを更新してみたり。</p>
+
+<p>今回は、Grails で簡易アップローダの実装まで。</p>
+
+<!-- more -->
+
+
+<h2>view の作成</h2>
+
+<p>まず、ファイルをアップロードするための form を作成する。</p>
+
+<p><div>
+  <pre><code class='zsh'>% grails create-controller uploader</code></pre>
+</div>
+</p>
+
+<p>これは、controller を生成するコマンドだけど、あとで必要なので今のうち生成。</p>
+
+<p>上のコマンドを実行したら「views」ってフォルダの中に「uploader」というフォルダが作成されている。
+この中にコントローラ uploader に対応するビューを置いていく。</p>
+
+<p>form を作成するため「uploader」フォルダの中に index.gsp というファイルを作成。<br/>
+index.gsp には、以下のような記述をする（ヘッダーとかは省略... ）</p>
+
+<p><div>
+  <pre><code class='gsp'>&amp;lt;g:form action=&quot;upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+  Upload Form:  &lt;input type=&quot;file&quot; name=&quot;myFile&quot; /&gt;
+  &lt;input type=&quot;submit&quot; /&gt;
+&amp;lt;/g:form&gt;</code></pre>
+</div>
+</p>
+
+<p>gspタグというのを使っているが、html のフォームとほとんど変わらないみたい。</p>
+
+<p>ここで重要なのが、&lt;g:form>タグの action属性に upload と記述しているところ。
+form を送信したときのアクションを指定していて、controller にこの uploadアクションを記述する。</p>
+
+<h2>controller の作成</h2>
+
+<p>view には、どういった表示をするのか、どういうインターフェースにするのかを書いた。</p>
+
+<p>次に、どんな操作をしたら、どう処理するかというのを controller に書いていく。
+controller の雛形は、「controllers」フォルダに生成されているので、そのファイルを編集していく。</p>
+
+<p>初期の状態はこんな感じ。</p>
+
+<p><div>
+  <pre><code class='groovy'>package gapp
+class UploaderController {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def index = {
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p>このファイルに、form を送信したときの処理 uploadアクションを追加していく。<br/>
+具体的には次のような記述を追加する。</p>
+
+<p><div>
+  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;....
+def upload = {
+    def f = request.getFile('myFile')
+    if (!f.empty) {
+        f.transferTo(new File('data/filename.jpg'))
+    }
+    else {
+        flash.message = 'file cannot be empty'
+        redirect(action: index)
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}</code></pre>
+</div>
+</p>
+
+<p><code>request.getFile('myFile')</code> メソッドでアップロードされたファイルの情報を取得。<br/>
+<code>f.transferTo(new File('data/filename.jpg'))</code> で、MultiPartFormData をファイルそのものに変換。</p>
+
+<p>これで、controller の作成は終了。</p>
+
+<h2>実行！</h2>
+
+<p><div>
+  <pre><code class='zsh'>% grails run-app</code></pre>
+</div>
+</p>
+
+<p>コマンドを実行して何事も無く起動できたら
+<a href="http://localhost:8080/gapp/uploader/index">http://localhost:8080/gapp/uploader/index</a>
+にアクセス。
+ファイルを選択して送信...すると真っ白いページに飛ぶが、「data」フォルダの中を見ると <code>filename.jpg</code> というファイルがアップロードされていることが確認できる。
+これで、簡単ではあるがアップローダを作成することができた。</p>
+
+<p>現状では、ファイル名を決め打ちしているのでアップロードするたびにファイルが上書きされてしまう。
+なので、ファイル名を元のファイルと同じにするか、ファイル名を form 入力かなにかで指定できるようにする必要がある。
+これについては、後日まとめたいと思う。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/uehaj/20080312/1205325198">http://d.hatena.ne.jp/uehaj/20080312/1205325198</a></li>
+<li><a href="http://grails.org/Controllers+-+File+Uploads">http://grails.org/Controllers+-+File+Uploads</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

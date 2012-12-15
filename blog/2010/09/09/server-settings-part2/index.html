@@ -1,0 +1,282 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>サーバ構築 2日目 (samba, SWAT) - crisis.tk's blog</title>
+	<meta name="author" content="Kouta TOUME">
+
+	
+	<meta name="description" content="ファイルサーバ構築が、一段落？したので作業ログをまとめときます。 samba &amp; SWAT のインストール 最初に samba と samba を GUI で設定するためのツール SWAT のインストール！ # yum -y install samba
+# yum -y install &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="crisis.tk's blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+</div>
+<h1><a href="/">crisis.tk's blog</a></h1>
+<p class="subtitle">Ruby, Sinatra, GPGPU とか...</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/crisis_tk" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/crisis-tk" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post">
+	<h1 class="title">サーバ構築 2日目 (samba, SWAT)</h1>
+	<div class="entry-content"><p>ファイルサーバ構築が、一段落？したので作業ログをまとめときます。</p>
+
+<!-- more -->
+
+
+<h2>samba &amp; SWAT のインストール</h2>
+
+<p>最初に samba と samba を GUI で設定するためのツール SWAT のインストール！</p>
+
+<div>
+  <pre><code class='zsh'># yum -y install samba
+# yum -y install samba-swat</code></pre>
+</div>
+
+
+<h2>SWAT の設定</h2>
+
+<p>SWAT の設定ファイルを編集。<br/>
+11行目の only_from に内部ネットワークアドレス（192.168.0.0/24）を追加。</p>
+
+<div>
+  <pre><code class='zsh'># vim /etc/xinetd.d/swat
+  5 service swat
+  6 {
+  7         disable = no
+  8         port            = 901
+  9         socket_type     = stream
+ 10         wait            = no
+ 11         only_from       = 127.0.0.1 192.168.0.0/24
+ 12         user            = root
+ 13         server          = /usr/sbin/swat
+ 14         log_on_failure  += USERID
+ 15 }</code></pre>
+</div>
+
+
+<p>サーバを起動したときに、自動的に SWAT も起動するように設定。</p>
+
+<div>
+  <pre><code class='zsh'># chkconfig swat on</code></pre>
+</div>
+
+
+<p>これで、SWAT の設定は終了。
+あとは「 http://サーバ名（or アドレス）:901 」で、SWAT にアクセスできるか確認。</p>
+
+<p>何故かできない（；゜Д゜）<br/>
+ん～、GUI でできないなら直接 samba の設定ファイルを編集してやる！
+（ファイアウォール設定が問題でした&#8230;ここで、気づけばよかったんですが orz）</p>
+
+<h2>samba の設定</h2>
+
+<p>samba にアクセスするユーザを登録。</p>
+
+<div>
+  <pre><code class='zsh'># pdbedit -a [ユーザ名]
+new password:
+retype new password:
+startsmbfilepwent_internal: file /etc/samba/smbpasswd did not exist. File successfully created.
+...（以下省略）</code></pre>
+</div>
+
+
+<p>ホームディレクトリ（/home/[ユーザ名]/samba）の作成。</p>
+
+<div>
+  <pre><code class='zsh'># mkdir /home/[ユーザ名]/samba</code></pre>
+</div>
+
+
+<p>登録するユーザが多い場合は、
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> にある便利なスクリプトを使うといいかも。</p>
+
+<p>共有ディレクトリの作成。
+どのユーザからでもアクセスできるように、ディレクトリ所有者を変更。</p>
+
+<div>
+  <pre><code class='zsh'># mkdir /home/samba
+# chown nobody:nobody /home/samba</code></pre>
+</div>
+
+
+<p>最後に、samba の設定ファイルを編集。
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> を参考に以下のように、編集・追加した。</p>
+
+<div>
+  <pre><code class='zsh'># vim /etc/samba/smb.conf
+ 57 [global]
+ 58         unix charset = UTF-8
+ 59         dos charset = CP932
+ 60         display charset = UTF-8
+ 77         workgroup = WORKGROUP
+ 84         hosts allow = 192.168.0. 127.
+224 ;       load printers = yes
+225         load printers = no
+226         disable spoolss = yes
+253 [homes]
+254         comment = Home Directories
+255         path = %H/samba
+256         browseable = no
+257         writable = yes
+296 [public]
+297         comment = Public Stuff
+298         path = /home/samba
+299         public = yes
+300         writable = yes
+301         only guest = yes</code></pre>
+</div>
+
+
+<p>samba の設定は終了。
+あとは、samba を起動して、自動的に起動するように設定。</p>
+
+<div>
+  <pre><code class='zsh'># /etc/rc.d/init.d/smb start
+# chkconfig smb on</code></pre>
+</div>
+
+
+<p>これで、Windows、Mac からサーバ（CentOS）が見えるはずなんだけど見えない！！
+調べてみると、samba サーバは問題ないみたいだし&#8230;まさか（；゜Д゜）</p>
+
+<div>
+  <pre><code class='zsh'># /etc/rc.d/init.d/iptables stop</code></pre>
+</div>
+
+
+<p>Windows、Mac からサーバ見える！！ SWAT もアクセスできる！！
+うむ。ファイアウォールが問題だったようだ。
+外部に公開しないとはいえ、ファイアウォールを完全に切るのは無用心なので、
+<a href="http://www.nextren.com/okamoto/2007/10/centos5_samba.html">CentOS5 で Samba 設定</a>
+を参考にファイアウォールの設定（901の許可も忘れずに&#8230;）。</p>
+
+<p>取り敢えず、ファイルサーバ構築終わり～
+あとは、SWAT でもう少し設定するくらい。今度は何をやろうかな。</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2012
+
+    Kouta TOUME
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'crisis-tk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/';
+        var disqus_url = 'http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-33089706-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+		</div>
+	</div>
+</body>
+</html>

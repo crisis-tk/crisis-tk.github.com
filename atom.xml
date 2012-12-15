@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CUDA 4.2 インストール ~ サンプルコード作成/実行]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
+    <updated>2012-07-01T15:27:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
+    <content type="html"><![CDATA[<p>手持ちの MacBook に CUDA を入れてみる。動作環境は下の通り。</p>
+
+<ul>
+<li>MacBook (2GHz Intel Core 2 Duo)</li>
+<li>Mac OS X 10.7.4</li>
+<li>CUDA 4.2</li>
+<li>GeForce 9400M</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>CUDA 4.2 のインストール</h2>
+
+<p>NVIDIAのサイト(<a href="http://developer.nvidia.com/cuda-downloads">http://developer.nvidia.com/cuda-downloads</a>) から必要な物をダウンロードする。<br/>
+今回は, 以下のものをダウンロード &amp; インストールした。</p>
+
+<ul>
+<li>CUDA Toolkit 4.2.9</li>
+<li>CUDA Drivers 4.2.10</li>
+<li>NVIDIA GPU Computing SDK 4.2.9</li>
+</ul>
+
+
+<p>インストールを終えたら, つぎは PATH の設定を行う。<br/>
+zsh を使ってるのであれば, <code>.zshrc</code> に以下のような内容を追加すればよい.</p>
+
+<pre><code># CUDA 設定
+export PATH=/usr/local/cuda/bin:$PATH
+export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
+export C_INCLUDE_PATH="/Developer/GPU Computing/C/common/inc"
+export CPLUS_INCLUDE_PATH="/Developer/GPU Computing/C/common/inc"
+</code></pre>
+
+<p>追加したら <code>exec zsh</code> あたりで設定を反映。
+正しく設定されていれば, 次のような結果になる。</p>
+
+<pre><code>% nvcc -V
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2012 NVIDIA Corporation
+Built on Sat_Apr__7_14:56:41_PDT_2012
+Cuda compilation tools, release 4.2, V0.2.1221
+</code></pre>
+
+<p>以上で CUDA の設定は終わり。</p>
+
+<h2>サンプルコードのコンパイル</h2>
+
+<p>SDK をインストールすると付いてくるサンプルコードをコンパイルして, CUDA の動作確認をする。<br/>
+サンプルコードは <code>/Developer/GPU Computing/C</code> にあるので,</p>
+
+<pre><code>% cd /Developer/GPU Computing/C
+% make
+</code></pre>
+
+<p>こんな感じでコンパイルできる。<br/>
+<code>lib/</code>フォルダに以下のようなライブラリファイルができていれば OK</p>
+
+<pre><code>% ls -1 lib
+libcutil_x86_64.a
+libparamgl_x86_64.a
+librendercheckgl_x86_64.a
+</code></pre>
+
+<p>サンプルコード <code>deviceQuery</code> を実行してみる。<br/>
+以下のようにデバイス情報が出力されていれば CUDA は正しく動作している。</p>
+
+<pre><code>% ./bin/darwin/release/deviceQuery
+[deviceQuery] starting...
+
+./bin/darwin/release/deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Found 1 CUDA Capable device(s)
+
+Device 0: "GeForce 9400M"
+  CUDA Driver Version / Runtime Version          4.2 / 4.2
+  CUDA Capability Major/Minor version number:    1.1
+  Total amount of global memory:                 254 MBytes (265945088 bytes)
+  ( 2) Multiprocessors x (  8) CUDA Cores/MP:    16 CUDA Cores
+  GPU Clock rate:                                1100 MHz (1.10 GHz)
+  Memory Clock rate:                             1064 Mhz
+  Memory Bus Width:                              128-bit
+  Max Texture Dimension Size (x,y,z)             1D=(8192), 2D=(65536,32768), 3D=(2048,2048,2048)
+  Max Layered Texture Size (dim) x layers        1D=(8192) x 512, 2D=(8192,8192) x 512
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       16384 bytes
+  Total number of registers available per block: 8192
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  768
+  Maximum number of threads per block:           512
+  Maximum sizes of each dimension of a block:    512 x 512 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             256 bytes
+  Concurrent copy and execution:                 No with 0 copy engine(s)
+  Run time limit on kernels:                     Yes
+  Integrated GPU sharing Host Memory:            Yes
+  Support host page-locked memory mapping:       Yes
+  Concurrent kernel execution:                   No
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support enabled:                No
+  Device is using TCC driver mode:               No
+  Device supports Unified Addressing (UVA):      No
+  Device PCI Bus ID / PCI location ID:           2 / 0
+  Compute Mode:
+     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 4.2, CUDA Runtime Version = 4.2, NumDevs = 1, Device = GeForce 9400M
+[deviceQuery] test results...
+PASSED
+
+&gt; exiting in 3 seconds: 3...2...1...done!
+</code></pre>
+
+<p>その他のサンプルコードも <code>bin/darwin/release/</code> 以下にある。<br/>
+これで CUDA を使う準備はできた。</p>
+
+<h2>CUDAプログラムを書いてみる</h2>
+
+<p><a href="http://www.gdep.jp/page/view/251">第4回 実際にCUDAを使ってみる</a> の Q3.Matrix のプログラムを実行してみる。<br/>
+CPU版は問題なかったのだが, GPU版のプログラムをコンパイルすると以下のようなコンパイルエラーがでた。</p>
+
+<pre><code>% nvcc matrix_gpu.cu
+Undefined symbols for architecture i386:
+  "_cutCreateTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutStartTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutStopTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutGetTimerValue", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutDeleteTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutCheckCmdLineFlag", referenced from:
+      __cutilExit(int, char**)in tmpxft_0000755b_00000000-13_matrix_ex.o
+ld: symbol(s) not found for architecture i386
+collect2: ld returned 1 exit status
+</code></pre>
+
+<p>調べてみると必要なライブラリがないときに出るエラーらしい。<br/>
+なので, <code>/Developer/GPU Computing/C/lib</code> にあるライブラリファイルを <code>/usr/lib</code> にコピーもしくはシンボリックリンクを貼ればよいとのこと。</p>
+
+<pre><code>% sudo ln -s /Developer/GPU Computing/C/lib/libcutil_x86_64.a /usr/lib/libcutil.a
+% sudo ln -s /Developer/GPU Computing/C/lib/libparamgl_x86_64.a /usr/lib/libparamgl.a
+% sudo ln -s /Developer/GPU Computing/C/lib/librendercheckgl_x86_64.a /usr/liblibrendercheckgl.a
+</code></pre>
+
+<p>さらにコンパイル時に <code>-lcutil</code>, <code>-m64</code> のオプションを指定してあげると上手くコンパイルできた。</p>
+
+<pre><code>% nvcc matrix_gpu.cu -lcutil -m64 -o matrix_gpu
+</code></pre>
+
+<h2>結果</h2>
+
+<p>以下, CPU版, GPU版の実行結果。</p>
+
+<pre><code>;; CPU版(最適化なし)
+% ./matrix_cpu
+Processing time: 68 (sec)
+
+;; CPU版(最適化あり)
+% ./matrix_cpu
+Processing time: 29 (sec)
+
+;; GPU版
+% ./matrix_gpu
+Processing time: 9255.196289 (msec)
+</code></pre>
+
+<p>最適化なしだと約7倍, 最適化あり(-O2)だと約3倍, GPU のほうが高速だった。<br/>
+個人的にはもう少し差がついてると面白かったんだけど&#8230;。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://developer.nvidia.com/cuda-downloads">CUDA Downloads | NVIDIA Developer Zone</a></li>
+<li><a href="http://tech.ckme.co.jp/cuda_inst_mac.shtml">CUDA - インストール（Mac OS X編）</a></li>
+<li><a href="http://www.gdep.jp/page/view/251">第4回 実際にCUDAを使ってみる</a></li>
+<li><a href="http://d.hatena.ne.jp/rabbit2go/20110707/1310037944">Mac miniでCUDA 4.0を使う</a></li>
+<li><a href="http://lqwerty.blog44.fc2.com/blog-entry-69.html">Lento ma non troppo - CUDA nvccコンパイラでエラーがでるとき</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Apache + Passenger で Sinatra アプリを動かす]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger/"/>
+    <updated>2012-06-14T21:09:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/06/14/sinatra-on-passenger</id>
+    <content type="html"><![CDATA[<p>Apache上で Sinatra を動かしたい(= デプロイしたい?) 場合, Passenger とやらを使うと簡単らしいのでインストールしてみた。</p>
+
+<p>導入環境</p>
+
+<ul>
+<li>Mac OS X 10.7.4</li>
+<li>Apache 2.2.21</li>
+<li>ruby 1.9.2p290</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>Passenger のインストール</h2>
+
+<pre><code>% gem install passenger
+% rbenv rehash
+% passenger-install-apache2-module
+</code></pre>
+
+<p>rbenv を使ってないなら <code>rbenv rehash</code> は必要ない。<br/>
+インストールが上手くいくと,</p>
+
+<pre><code>Please edit your Apache configuration file, and add these lines:
+
+    LoadModule passenger_module /Users/crisis_tk/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/passenger-3.0.12/ext/apache2/mod_passenger.so
+    PassengerRoot /Users/crisis_tk/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/passenger-3.0.12
+    PassengerRuby /Users/crisis_tk/.rbenv/versions/1.9.2-p290/bin/ruby
+</code></pre>
+
+<p>こんな感じのメッセージが表示されるので, apache のコンフィグファイルに上記の三行を追加する。</p>
+
+<p>自分の環境だと <code>/private/etc/apache2/other/*.conf</code> も include してくれるみたいだったので,<br/>
+以下のようなファイルを作った。</p>
+
+<pre><code>/private/etc/apache2/other/passenger.conf
+</code></pre>
+
+<p>ここまでで Passenger のインストールは終わり。</p>
+
+<h2>Sinatra アプリの準備</h2>
+
+<p>Sinatra アプリを Apache + Passenger な環境で動かすためには, 以下のようなディレクトリ構成にする必要がある.</p>
+
+<pre><code>sinatra
+├── app.rb
+├── config.ru
+├── public/
+└── tmp/
+</code></pre>
+
+<p><code>app.rb</code> は Sinatra アプリ本体。中身は省略！<br/>
+<code>config.ru</code> ファイルは Passenger が Sinatra アプリを動かす際に必要なファイルだとか。<br/>
+ファイルの中身は以下のような感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;./app&#39;</span>
+</span><span class='line'><span class="n">run</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>public</code> と <code>tmp</code> フォルダは空のフォルダでよい。
+画像ファイル, Scriptファイルがあれば publicフォルダに入れる感じ。</p>
+
+<p>これで Sinatra アプリの準備は終わり。</p>
+
+<h2>Apache の設定</h2>
+
+<p>と言ってもほとんどすることはない。
+サブドメインで実行できるように DocumentRoot にシンボリックリンクをはる。</p>
+
+<p>Mac だと DocumentRoot は <code>/Library/WebServer/Documents/</code> らしいので,</p>
+
+<pre><code>% sudo ln -s /Users/crisis_tk/sinatra/public /Library/WebServer/Documents/hello-world
+</code></pre>
+
+<p>こんな感じでオッケー。
+あとは, Apache のコンフィグファイルに次の一行を追加！</p>
+
+<pre><code>% cat /private/etc/apache2/users/crisis_tk.conf
+...
+RackBaseURI /hello-world
+...
+</code></pre>
+
+<p>そんでもって最後に Apache の再起動。
+これで http://your.domain.name/hello-world/ で動いてるはず。<br/>
+最後の <code>/</code> を忘れると動かないことがあるので注意が必要。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/foosin/20090619/1245426335">sinatraアプリなどをapache/passenger/mod_railsで動かす - だるろぐ跡地</a></li>
+<li><a href="http://d.hatena.ne.jp/shokai/20100506/1273174669">passengerでsinatraアプリをサブディレクトリで実行する - 橋本詳解</a></li>
+<li><a href="http://d.hatena.ne.jp/shinking/20100313/1268491701">sinatraを動かす - shinkingの日記</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[octpress はじめました。]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro/"/>
+    <updated>2012-06-12T12:15:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/06/12/octpress-intro</id>
+    <content type="html"><![CDATA[<p>今まで日々の作業記録は Evernote に取ってたのですが, ふとブログ書きたいと思いまして, <a href="http://pages.github.com/">Github Pages</a> と <a href="http://octopress.org/">Octpress</a> を利用してブログを構築してみました。</p>
+
+<p>今回は, はてなダイアリーから記事の移行と Github Pages + Octpress でブログ公開までの流れをまとめました。</p>
+
+<!-- more -->
+
+
+<h2>記事の移行</h2>
+
+<p>はじめに, はてなダイアリーの記事を <code>はてなの日記データ形式</code> という形式でエクスポートしておく。
+(管理画面から [データ管理] → はてなの日記データ形式 の項目 [ダウンロード] からエクスポートできる)</p>
+
+<p><code>はてな記法</code> で書かれた記事から <code>Markdown形式</code> への変換は,
+ <a href="http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown">一生涯はてな記法しますか？それともMarkdownしますか？</a> の記事で紹介されていた Rubyライブラリ <code>hateda2md</code> を利用した。</p>
+
+<p>こんな感じのコードで変換できた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- coding: utf-8 -*-</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;hateda2md&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mdb</span> <span class="o">=</span> <span class="no">HateDa</span><span class="o">::</span><span class="no">MdBuilder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;crisis_tk.xml&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">filters</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">pre_defined_filters</span>
+</span><span class='line'><span class="n">filters</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="n">f</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mdb</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'><span class="n">mdb</span><span class="o">.</span><span class="n">save_to_files</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Github Pages + Octpress 環境構築</h2>
+
+<p>Github Pages + Octpress の環境構築は、</p>
+
+<ul>
+<li><a href="http://octopress.org/docs/">公式ドキュメント</a></li>
+<li><a href="http://tokkonopapa.github.com/blog/2011/12/30/octopress-on-github-and-bitbucket/">Octopressのインストールから運用管理まで - T.I.D.</a></li>
+<li><a href="http://hnakamur.github.com/blog/2012/03/03/how-to-setup-octopress/">octopressでgithubにブログ開設 - hnakamur&#8217;s blog at github</a></li>
+</ul>
+
+
+<p>にすごく丁寧にまとめられていました。</p>
+
+<h2>記事を書く</h2>
+
+<p>新しい記事の作成。title がそのまま URL になるので日本語は使えないみたい。</p>
+
+<pre><code>rake new_post\['title'\]
+</code></pre>
+
+<p>上のコマンドを実行すると以下のようなファイルができるので, それを適当なエディタで編集。</p>
+
+<pre><code>emacs -nw source/_posts/2012-06-12-title.markdown
+</code></pre>
+
+<p>記事を書いたら次のコマンドを実行して記事の確認。
+http://localhost:4000 にアクセスすると記事のプレビューを見ることができる。</p>
+
+<pre><code>rake generate
+rake preview
+</code></pre>
+
+<p>次のコマンドで github にプッシュされて, crisis-tk.github.com に記事が公開される。</p>
+
+<pre><code>rake deploy
+</code></pre>
+
+<h2>感想的ななにか</h2>
+
+<p>導入がすごく簡単！好きなエディタで書けるのもいいね！
+基本的な Markdown記法さえ覚えればサクサク書ける感じなので暫く使ってみるかな。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello, octopress!]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/06/10/hello/"/>
+    <updated>2012-06-10T19:48:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/06/10/hello</id>
+    <content type="html"><![CDATA[<p>octopress でブログ記事を投稿して見るテスト。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby on Rails 環境の導入]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro/"/>
+    <updated>2012-02-20T22:08:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/02/20/ruby-on-rails-intro</id>
+    <content type="html"><![CDATA[<p>CentOS 5.5 に Ruby on Rails 環境を導入する。</p>
+
+<ul>
+<li>Ruby 1.9.2 p180</li>
+<li>SQLite 3.7.5</li>
+<li>Rails 3.2.1</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>Ruby のインストール</h2>
+
+<div>
+  <pre><code class='terminfo'># wget ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p180.tar.gz
+# tar xvzf ruby-1.9.2-p180.tar.gz
+# cd ruby-1.9.2-p180
+# ./configure
+# make -j2
+# make install</code></pre>
+</div>
+
+
+<p>PATH が通ってなかったので <code>~/.bash_profile</code> を編集。</p>
+
+<div>
+  <pre><code class='terminfo'># emacs -nw ~/.bash_profile
+...
+PATH=$PATH:$HOME/bin:/usr/local/bin
+export PATH
+# source ~/.bash_profile
+# ruby -v
+ruby 1.9.2p180 (2011-02-18 revision 30909) [i686-linux]</code></pre>
+</div>
+
+
+<p>Ruby のインストールおわり。</p>
+
+<h2>SQLite のインストール</h2>
+
+<div>
+  <pre><code class='terminfo'># wget [http://www.sqlite.org/sqlite-autoconf-3070500.tar.gz](http://www.sqlite.org/sqlite-autoconf-3070500.tar.gz)
+# tar zxvf sqlite-autoconf-3070500.tar.gz
+# cd sqlite-autoconf-3071000
+# ./configure
+# make -j2
+# make install
+# sqlite3 -version
+3.3.6</code></pre>
+</div>
+
+
+<p>version 3.7.5 になってない&#8230;?</p>
+
+<div>
+  <pre><code class='terminfo'># /usr/local/bin/sqlite3 -version
+/usr/local/bin/sqlite3: symbol lookup error: /usr/local/bin/sqlite3: undefined symbol: sqlite3_config</code></pre>
+</div>
+
+
+<p>make install 時のログをみると&#8230;</p>
+
+<div>
+  <pre><code class='terminfo'>----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib
+
+   If you ever happen to want to link against installed libraries
+   in a given directory, LIBDIR, you must either use libtool, and
+   specify the full pathname of the library, or use the `-LLIBDIR'
+   flag during linking and do at least one of the following:
+      - add LIBDIR to the `LD_LIBRARY_PATH' environment variableduring execution
+      - add LIBDIR to the `LD_RUN_PATH' environment variableduring linking
+      - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
+      - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+   See any operating system documentation about shared libraries for
+   more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------</code></pre>
+</div>
+
+
+<p>ライブラリが既にインストールされてるとかなんとか&#8230;<br/>
+<code>./configure</code> に <code>prefix=/usr/</code> を付ければ行けそう
+(参考:<a href="http://sisomoti.blog76.fc2.com/blog-entry-15.html">http://sisomoti.blog76.fc2.com/blog-entry-15.html</a>)。
+ということで、再チャレンジ！</p>
+
+<div>
+  <pre><code class='terminfo'># ./configure --prefix=/usr/
+# make -j2
+# make install
+# sqlite3 -version 
+3.7.5</code></pre>
+</div>
+
+
+<p>よしよしできたできた。<br/>
+つぎは SQLite の Ruby用アダプタのインストール</p>
+
+<div>
+  <pre><code class='terminfo'># gem install sqlite3
+Building native extensions.  This could take a while...
+Successfully installed sqlite3-1.3.5
+1 gem installed
+...
+(以下省略)</code></pre>
+</div>
+
+
+<p>SQLite のインストールおわり。</p>
+
+<h2>Rails のインストール</h2>
+
+<div>
+  <pre><code class='terminfo'># gem install rails
+...
+Successfully installed i18n-0.6.0
+Successfully installed multi_json-1.1.0
+Successfully installed activesupport-3.2.1
+(中略)
+Successfully installed railties-3.2.1
+Successfully installed bundler-1.0.22
+Successfully installed rails-3.2.1
+30 gems installed
+(以下省略)</code></pre>
+</div>
+
+
+<p>一応バージョン確認</p>
+
+<div>
+  <pre><code class='terminfo'># rails -v
+Rails 3.2.1</code></pre>
+</div>
+
+
+<p>Rails のインストールもおわり。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。 その4]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4/"/>
+    <updated>2011-09-05T22:01:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/09/05/grails-uploader-part4</id>
+    <content type="html"><![CDATA[<p>前回からの続き。</p>
+
+<p>今回は、アップロードしたファイルを表示できるようにする。<br/>
+具体的には、音楽ファイルをアップロードしたら、HTML5 Audioタグを用いて再生できるような機能を実装する。</p>
+
+<!-- more -->
+
+
+<h2>Controller を編集</h2>
+
+<p>DB に格納されたファイル情報を基に、アップロードされたファイルの表示をする。
+そのため、DB からレコード一覧を取得する処理を Controller に記述。</p>
+
+<div>
+  <pre><code class='groovy'>class UploaderController {
+    ...
+    def upload = {
+        ...
+    }
+    def list = {
+        [tableData: Uploader.list()]
+    }
+}</code></pre>
+</div>
+
+
+<p>前回ドメインクラスとして Uploader を定義したので、<code>list()</code> メソッドを呼び出すだけでレコード一覧を取得することができる。
+取得したレコード一覧を <code>tableData</code> に設定すると、view 側で <code>tableData</code> から自由にレコードを取り出すことができる。</p>
+
+<h2>View の作成</h2>
+
+<p>tableData は配列（連想配列？）の形で渡されるので、<code>&lt;g:each&gt;</code> タグを使って要素を 1つずつ取り出して表示させる。<br/>
+具体的には次のように記述した。</p>
+
+<div>
+  <pre><code class='gsp'>&lt;div class=&quot;list&quot;&gt;
+        &lt;g:each in=&quot;${tableData}&quot; status=&quot;i&quot; var=&quot;record&quot;&gt;
+            &lt;p&gt;${record.filename}&lt;/p&gt;
+            &lt;g:if test=&quot;${record.filename}&quot;&gt;
+                &lt;p&gt;
+                    &lt;audio src=&quot;${createLinkTo(dir:'data/', file:''+record.filename)}&quot; controls&gt;
+                    &lt;/audio&gt;
+                &lt;/p&gt;
+            &lt;/g:if&gt;
+        &lt;/g:each&gt;
+    &lt;/div&gt;</code></pre>
+</div>
+
+
+<p>grailsタグの意味は、それぞれ以下の通り。</p>
+
+<ul>
+<li><code>&lt;g:each&gt;</code> タグ：配列から要素を 1つずつ取り出す</li>
+<li><code>&lt;g:if&gt;</code>タグ：ファイルが存在するかの判定</li>
+<li><code>createLinkTo()</code> メソッド：ファイルへのリンクを生成</li>
+</ul>
+
+
+<p>以上で、アップロードしたファイルを表示/再生することができる。</p>
+
+<p>今回は、HTML5 Audioタグを使っているので音楽ファイルがアップロードされていれば、音楽ファイルを再生することができる。</p>
+
+<p>Grails を初めて使ってみたけど、結構楽に基本的なアップローダの機能は実装できたと思う。
+まだまだ、MVCな考え方に慣れてないので、もう少し Grails 触ってみようかなと思ったり思わなかったり&#8230;。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。 その3]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/"/>
+    <updated>2011-08-04T21:41:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3</id>
+    <content type="html"><![CDATA[<p>前回からの続き。<br/>
+今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
+
+<!-- more -->
+
+
+<h2>DB の環境設定</h2>
+
+<p>はじめに、使う DB を MySQL に変更する。</p>
+
+<p>DB を変更するために、<code>conf/DataSource.groovy</code> を編集する。<br/>
+その前に、grails で使うための DB をあらかじめ作っておくのと、
+Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
+
+<div>
+  <pre><code class='groovy'>dataSource {
+    pooled = true
+    driverClassName = &quot;com.mysql.jdbc.Driver&quot;
+    username = &quot;ユーザネーム&quot;
+    password = &quot;パスワード&quot;
+}
+...
+environments {
+    development {
+        dataSource {
+            dbCreate = &quot;update&quot;
+            url = &quot;jdbc:mysql://localhost/データベース名&quot;
+        }
+        ...
+    }
+    ...
+}</code></pre>
+</div>
+
+
+<p>これで、Grails から MySQL を使うことができる。</p>
+
+<h2>domain の作成</h2>
+
+<p>まず、ドメインクラスを作成する。</p>
+
+<div>
+  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
+</div>
+
+
+<p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
+このファイルにテーブルのフィールド情報等を記述していく。</p>
+
+<p>今回はアップロードしたファイルの情報を DB に格納するので、</p>
+
+<ul>
+<li>String title</li>
+<li>String summary</li>
+<li>String filename</li>
+<li>Date dateCreated</li>
+<li>Date lastUpdated</li>
+</ul>
+
+
+<p>を定義する。</p>
+
+<p>また、今回のようにアップロードされたファイルの名前を DB に格納する場合、次のような制約を記述する必要があるらしい。
+（参照：<a href="http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html">ファイルのアップロードと Atom の配信</a>）</p>
+
+<pre><code>filename(blank:true, nullable:true)
+</code></pre>
+
+<p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
+
+<div>
+  <pre><code class='groovy'>class Uploader {
+    static constraints = {
+        title()
+        summary(maxSize:1000)
+        filename(blank:true, nullable:true)
+        dateCreated()
+        lastUpdated()
+    }
+    static mapping = {
+        sort &quot;lastUpdated&quot;:&quot;desc&quot;
+    }
+    String title
+    String summary
+    String filename
+    Date dateCreated
+    Date lastUpdated
+}</code></pre>
+</div>
+
+
+<p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
+<code>static mapping = {}</code> には、主キー/複合キー等の設定や、今回のようにソート条件などを記述。<br/>
+以上で、DB の設定と準備は終了。</p>
+
+<h2>controller の編集</h2>
+
+<p>前回作った controller を編集していく。</p>
+
+<p>upload アクションに、form 入力された値（これは全て params にまとめられてる）を持つインスタンスを作成。
+インスタンスを作成したら、</p>
+
+<ul>
+<li><code>hasErrors()</code> メソッド：インスタンスがきちんと作られているかチェック。</li>
+<li><code>save()</code> メソッド：DB に保存</li>
+</ul>
+
+
+<p>といったメソッドを使ってエラー処理、DB書込みを行う。</p>
+
+<p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
+これらをまとめると、以下のような感じになる。</p>
+
+<div>
+  <pre><code class='groovy'>class UploaderController {
+    ....
+    def upload = {
+        def upParam = new Uploader(params)
+        ...
+        if (!file.empty) {
+            ...
+            f.transferTo(new File('data/'+file.originalFilename))
+            upParam.filename = file.originalFilename
+        }
+        if (!upParam.hasErrors() &amp;&amp; upParam.save()) {
+        }</code></pre>
+</div>
+
+
+<p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>
+
+<p>今回はファイルの情報を DB に格納するための処理を追加しただけなので、ファイル送信後のページは相変わらず真っ白なページ&#8230;。
+DB に格納後ファイル一覧のページに redirect するように記述するとエラーでるんですよね。なんでだろ？</p>
+
+<p>ファイルアップロード → DB書込み → ファイルの表示 ができるとアップローダらしくなるんだけどな。
+この辺りはもう少し時間がかかりそう。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。その2]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2/"/>
+    <updated>2011-07-17T00:00:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/07/17/grails-uploader-part2</id>
+    <content type="html"><![CDATA[<p>昨日に引き続き更新。<br/>
+今回は、ファイルアップロード時に元ファイルと同じ名前でサーバに保存できるようにする。</p>
+
+<!-- more -->
+
+
+<h2>controller の作成</h2>
+
+<p>前回作った controller を編集していく。</p>
+
+<p><code>request.getFile()</code> メソッドでアップロードされたファイルの情報を取得。
+ファイル情報を取得したら以下のメソッドでファイルの情報を取得することが可能と&#8230;</p>
+
+<ul>
+<li>class : アップロードしたファイルのクラス名</li>
+<li>name : アップロードしたファイルの名前（オリジナルのファイル名ではない）</li>
+<li>size : アップロードしたファイルのサイズ</li>
+<li>contentType : アップロードしたファイルのタイプ</li>
+<li>originalFilename : アップロードしたファイルのオリジナルの名前</li>
+</ul>
+
+
+<p>調べたら、意外と簡単にできた。<br/>
+あとは、上のメソッドを前回作った controller に追加して&#8230;</p>
+
+<div>
+  <pre><code class='groovy'>class UploaderController {
+    ....
+    def upload = {
+        def file = request.getFile('myFile')
+        if (!file.empty) {
+            println &quot;Class: ${file.class}&quot;
+            println &quot;Name: ${file.name}&quot;
+            println &quot;OriginalFileName: ${file.originalFilename}&quot;
+            println &quot;Size: ${file.size}&quot;
+            println &quot;ContentType: ${file.contentType}&quot;
+            f.transferTo(new File('data/'+file.originalFilename))
+            response.sendError(200, 'Done')
+        }
+        else {
+            flash.message = 'file cannot be empty'
+            redirect(action: index)
+        }
+}</code></pre>
+</div>
+
+
+<p>こんな感じに編集。これでアップロードしたファイルと同じ名前でサーバに保存される。<br/>
+実行して気づいたのだが、<code>println</code> の行はページに表示されるのではなくてコンソールに出力される。</p>
+
+<h2>実行！</h2>
+
+<div>
+  <pre><code class='zsh'>% grails run-app</code></pre>
+</div>
+
+
+<p>前回同様、コマンドを実行して何事も無く起動できたら <a href="http://localhost:8080/gapp">http://localhost:8080/gapp</a> にアクセス。</p>
+
+<p>ファイルを選択して送信&#8230;またまた真っ白いページに飛ばされるけれど、
+「data」フォルダにアップロードしたファイルと同じ名前のファイルが ( ´∀｀)bｸﾞｯ!</p>
+
+<p>ファイル送信後の真っ白いページどうにかしろって話ですよね。<br/>
+アップロードしたファイルを表示できたらいいのかな？
+この辺の処理をどう書いていいのかよく分からない。</p>
+
+<p>今回参考にしたページに <code>TagLib</code> ってのを使うとできるって書いてあったのでやってみるかな。</p>
+
+<p>あと、アップロードしたファイルを DB で管理できると今後幸せになりそうなので、
+そこんとこの処理も考えないといけないかも。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://www.servlets.com/cos/javadoc/com/oreilly/servlet/MultipartRequest.html">http://www.servlets.com/cos/javadoc/com/oreilly/servlet/MultipartRequest.html</a></li>
+<li><a href="http://groovy.codehaus.org/api/groovy/lang/GroovyCodeSource.html">http://groovy.codehaus.org/api/groovy/lang/GroovyCodeSource.html</a></li>
+<li><a href="http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html">http://www.ibm.com/developerworks/jp/java/library/j-grails06099/index.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grails で uploader を作る。]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1/"/>
+    <updated>2011-07-16T21:17:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2011/07/16/grails-uploader-part1</id>
+    <content type="html"><![CDATA[<p>久々の更新。<br/>
+大学のとある講義で Grails を使った Webアプリケーションを作ることになりまして、
+その作業のログと得た知識の整理を兼ねてブログを更新してみたり。</p>
+
+<p>今回は、Grails で簡易アップローダの実装まで。</p>
+
+<!-- more -->
+
+
+<h2>view の作成</h2>
+
+<p>まず、ファイルをアップロードするための form を作成する。</p>
+
+<div>
+  <pre><code class='zsh'>% grails create-controller uploader</code></pre>
+</div>
+
+
+<p>これは、controller を生成するコマンドだけど、あとで必要なので今のうち生成。</p>
+
+<p>上のコマンドを実行したら「views」ってフォルダの中に「uploader」というフォルダが作成されている。
+この中にコントローラ uploader に対応するビューを置いていく。</p>
+
+<p>form を作成するため「uploader」フォルダの中に index.gsp というファイルを作成。<br/>
+index.gsp には、以下のような記述をする（ヘッダーとかは省略&#8230; ）</p>
+
+<div>
+  <pre><code class='gsp'>&lt;g:form action=&quot;upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+  Upload Form:  &lt;input type=&quot;file&quot; name=&quot;myFile&quot; /&gt;
+  &lt;input type=&quot;submit&quot; /&gt;
+&lt;/g:form&gt;</code></pre>
+</div>
+
+
+<p>gspタグというのを使っているが、html のフォームとほとんど変わらないみたい。</p>
+
+<p>ここで重要なのが、&lt;g:form>タグの action属性に upload と記述しているところ。
+form を送信したときのアクションを指定していて、controller にこの uploadアクションを記述する。</p>
+
+<h2>controller の作成</h2>
+
+<p>view には、どういった表示をするのか、どういうインターフェースにするのかを書いた。</p>
+
+<p>次に、どんな操作をしたら、どう処理するかというのを controller に書いていく。
+controller の雛形は、「controllers」フォルダに生成されているので、そのファイルを編集していく。</p>
+
+<p>初期の状態はこんな感じ。</p>
+
+<div>
+  <pre><code class='groovy'>package gapp
+class UploaderController {
+    def index = {
+    }
+}</code></pre>
+</div>
+
+
+<p>このファイルに、form を送信したときの処理 uploadアクションを追加していく。<br/>
+具体的には次のような記述を追加する。</p>
+
+<div>
+  <pre><code class='groovy'>class UploaderController {
+    ....
+    def upload = {
+        def f = request.getFile('myFile')
+        if (!f.empty) {
+            f.transferTo(new File('data/filename.jpg'))
+        }
+        else {
+            flash.message = 'file cannot be empty'
+            redirect(action: index)
+        }
+}</code></pre>
+</div>
+
+
+<p><code>request.getFile('myFile')</code> メソッドでアップロードされたファイルの情報を取得。<br/>
+<code>f.transferTo(new File('data/filename.jpg'))</code> で、MultiPartFormData をファイルそのものに変換。</p>
+
+<p>これで、controller の作成は終了。</p>
+
+<h2>実行！</h2>
+
+<div>
+  <pre><code class='zsh'>% grails run-app</code></pre>
+</div>
+
+
+<p>コマンドを実行して何事も無く起動できたら
+<a href="http://localhost:8080/gapp/uploader/index">http://localhost:8080/gapp/uploader/index</a>
+にアクセス。
+ファイルを選択して送信&#8230;すると真っ白いページに飛ぶが、「data」フォルダの中を見ると <code>filename.jpg</code> というファイルがアップロードされていることが確認できる。
+これで、簡単ではあるがアップローダを作成することができた。</p>
+
+<p>現状では、ファイル名を決め打ちしているのでアップロードするたびにファイルが上書きされてしまう。
+なので、ファイル名を元のファイルと同じにするか、ファイル名を form 入力かなにかで指定できるようにする必要がある。
+これについては、後日まとめたいと思う。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/uehaj/20080312/1205325198">http://d.hatena.ne.jp/uehaj/20080312/1205325198</a></li>
+<li><a href="http://grails.org/Controllers+-+File+Uploads">http://grails.org/Controllers+-+File+Uploads</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 3日目 (sendmail, chkconfig)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3/"/>
+    <updated>2010-09-13T21:05:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/13/server-settings-part3</id>
+    <content type="html"><![CDATA[<p>初日みたいに丸１日作業というのは、当分なさそうな雰囲気&#8230;。<br/>
+なので、細かい作業をまとめて記録って感じになるかな。</p>
+
+<p>今回は必要ないサービスは止めておけ！というお話。</p>
+
+<!-- more -->
+
+
+<h2>不要なデーモンを止める！</h2>
+
+<p>Samba の設定を少し変更 -> 再起動したら、起動がものすごく遅い（；゜Д゜）</p>
+
+<p>仕方なく直接モニター繋いでみると、OS起動中？デーモン起動中？のとこで sendmail とか言うデーモンが、名前解決？しようと頑張ってました&#8230;。<br/>
+そこら辺は勉強不足でよく分からないのですが、取り敢えず、「不要なデーモンは止めとけ！」ということらしく、
+<a href="http://afexcel.seesaa.net/article/93682438.html">CentOS 5.1 インストール後の設定（不要なサービスを止める）</a>
+を参考に、不要なデーモンを起動しないように設定。</p>
+
+<div>
+  <pre><code class='zsh'>[root@centos ~] # chkconfig nfslock off
+[root@centos ~] # chkconfig portmap off
+[root@centos ~] # chkconfig bluetooth off
+[root@centos ~] # chkconfig ip6tables off
+[root@centos ~] # chkconfig auditd off
+[root@centos ~] # chkconfig mcstrans off
+[root@centos ~] # chkconfig restorecond off
+[root@centos ~] # chkconfig cups off
+[root@centos ~] # chkconfig mdmonitor off
+[root@centos ~] # chkconfig gpm off
+[root@centos ~] # chkconfig pcscd off</code></pre>
+</div>
+
+
+<p>んで、再起動。</p>
+
+<div>
+  <pre><code class='zsh'>[root@centos ~] # chkconfig --list | grep 3:on
+acpid           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+anacron         0:off   1:off   2:on    3:on    4:on    5:on    6:off
+apmd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+atd             0:off   1:off   2:off   3:on    4:on    5:on    6:off
+autofs          0:off   1:off   2:off   3:on    4:on    5:on    6:off
+avahi-daemon    0:off   1:off   2:off   3:on    4:on    5:on    6:off
+cpuspeed        0:off   1:on    2:on    3:on    4:on    5:on    6:off
+crond           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+haldaemon       0:off   1:off   2:off   3:on    4:on    5:on    6:off
+hidd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+iptables        0:off   1:off   2:on    3:on    4:on    5:on    6:off
+irqbalance      0:off   1:off   2:on    3:on    4:on    5:on    6:off
+kudzu           0:off   1:off   2:off   3:on    4:on    5:on    6:off
+lvm2-monitor    0:off   1:on    2:on    3:on    4:on    5:on    6:off
+messagebus      0:off   1:off   2:off   3:on    4:on    5:on    6:off
+microcode_ctl   0:off   1:off   2:on    3:on    4:on    5:on    6:off
+netfs           0:off   1:off   2:off   3:on    4:on    5:on    6:off
+network         0:off   1:off   2:on    3:on    4:on    5:on    6:off
+rawdevices      0:off   1:off   2:off   3:on    4:on    5:on    6:off
+readahead_early 0:off   1:off   2:on    3:on    4:on    5:on    6:off
+rpcgssd         0:off   1:off   2:off   3:on    4:on    5:on    6:off
+rpcidmapd       0:off   1:off   2:off   3:on    4:on    5:on    6:off
+smartd          0:off   1:off   2:on    3:on    4:on    5:on    6:off
+smb             0:off   1:off   2:on    3:on    4:on    5:on    6:off
+sshd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+syslog          0:off   1:off   2:on    3:on    4:on    5:on    6:off
+xfs             0:off   1:off   2:on    3:on    4:on    5:on    6:off
+xinetd          0:off   1:off   2:off   3:on    4:on    5:on    6:off
+yum-cron        0:off   1:off   2:on    3:on    4:on    5:on    6:off</code></pre>
+</div>
+
+
+<p>今のところ起動してるデーモンはこんな感じ。まだまだ、不要なものもあるだろうけど、使ってるか使ってないか曖昧なものは残してます。</p>
+
+<p>先週の作業はこんなもんかな。
+他にあったら便利な機能？サーバ？無いかなーと模索中&#8230;なんか無いかなー。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 2日目 (samba, SWAT)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2/"/>
+    <updated>2010-09-09T20:54:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/09/server-settings-part2</id>
+    <content type="html"><![CDATA[<p>ファイルサーバ構築が、一段落？したので作業ログをまとめときます。</p>
+
+<!-- more -->
+
+
+<h2>samba &amp; SWAT のインストール</h2>
+
+<p>最初に samba と samba を GUI で設定するためのツール SWAT のインストール！</p>
+
+<div>
+  <pre><code class='zsh'># yum -y install samba
+# yum -y install samba-swat</code></pre>
+</div>
+
+
+<h2>SWAT の設定</h2>
+
+<p>SWAT の設定ファイルを編集。<br/>
+11行目の only_from に内部ネットワークアドレス（192.168.0.0/24）を追加。</p>
+
+<div>
+  <pre><code class='zsh'># vim /etc/xinetd.d/swat
+  5 service swat
+  6 {
+  7         disable = no
+  8         port            = 901
+  9         socket_type     = stream
+ 10         wait            = no
+ 11         only_from       = 127.0.0.1 192.168.0.0/24
+ 12         user            = root
+ 13         server          = /usr/sbin/swat
+ 14         log_on_failure  += USERID
+ 15 }</code></pre>
+</div>
+
+
+<p>サーバを起動したときに、自動的に SWAT も起動するように設定。</p>
+
+<div>
+  <pre><code class='zsh'># chkconfig swat on</code></pre>
+</div>
+
+
+<p>これで、SWAT の設定は終了。
+あとは「 http://サーバ名（or アドレス）:901 」で、SWAT にアクセスできるか確認。</p>
+
+<p>何故かできない（；゜Д゜）<br/>
+ん～、GUI でできないなら直接 samba の設定ファイルを編集してやる！
+（ファイアウォール設定が問題でした&#8230;ここで、気づけばよかったんですが orz）</p>
+
+<h2>samba の設定</h2>
+
+<p>samba にアクセスするユーザを登録。</p>
+
+<div>
+  <pre><code class='zsh'># pdbedit -a [ユーザ名]
+new password:
+retype new password:
+startsmbfilepwent_internal: file /etc/samba/smbpasswd did not exist. File successfully created.
+...（以下省略）</code></pre>
+</div>
+
+
+<p>ホームディレクトリ（/home/[ユーザ名]/samba）の作成。</p>
+
+<div>
+  <pre><code class='zsh'># mkdir /home/[ユーザ名]/samba</code></pre>
+</div>
+
+
+<p>登録するユーザが多い場合は、
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> にある便利なスクリプトを使うといいかも。</p>
+
+<p>共有ディレクトリの作成。
+どのユーザからでもアクセスできるように、ディレクトリ所有者を変更。</p>
+
+<div>
+  <pre><code class='zsh'># mkdir /home/samba
+# chown nobody:nobody /home/samba</code></pre>
+</div>
+
+
+<p>最後に、samba の設定ファイルを編集。
+<a href="http://centossrv.com/samba.shtml">Windowsファイルサーバー構築(Samba)</a> を参考に以下のように、編集・追加した。</p>
+
+<div>
+  <pre><code class='zsh'># vim /etc/samba/smb.conf
+ 57 [global]
+ 58         unix charset = UTF-8
+ 59         dos charset = CP932
+ 60         display charset = UTF-8
+ 77         workgroup = WORKGROUP
+ 84         hosts allow = 192.168.0. 127.
+224 ;       load printers = yes
+225         load printers = no
+226         disable spoolss = yes
+253 [homes]
+254         comment = Home Directories
+255         path = %H/samba
+256         browseable = no
+257         writable = yes
+296 [public]
+297         comment = Public Stuff
+298         path = /home/samba
+299         public = yes
+300         writable = yes
+301         only guest = yes</code></pre>
+</div>
+
+
+<p>samba の設定は終了。
+あとは、samba を起動して、自動的に起動するように設定。</p>
+
+<div>
+  <pre><code class='zsh'># /etc/rc.d/init.d/smb start
+# chkconfig smb on</code></pre>
+</div>
+
+
+<p>これで、Windows、Mac からサーバ（CentOS）が見えるはずなんだけど見えない！！
+調べてみると、samba サーバは問題ないみたいだし&#8230;まさか（；゜Д゜）</p>
+
+<div>
+  <pre><code class='zsh'># /etc/rc.d/init.d/iptables stop</code></pre>
+</div>
+
+
+<p>Windows、Mac からサーバ見える！！ SWAT もアクセスできる！！
+うむ。ファイアウォールが問題だったようだ。
+外部に公開しないとはいえ、ファイアウォールを完全に切るのは無用心なので、
+<a href="http://www.nextren.com/okamoto/2007/10/centos5_samba.html">CentOS5 で Samba 設定</a>
+を参考にファイアウォールの設定（901の許可も忘れずに&#8230;）。</p>
+
+<p>取り敢えず、ファイルサーバ構築終わり～
+あとは、SWAT でもう少し設定するくらい。今度は何をやろうかな。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[サーバ構築 1日目 (Network, SELinux)]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1/"/>
+    <updated>2010-09-07T20:31:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2010/09/07/server-settings-part1</id>
+    <content type="html"><![CDATA[<p>今日からサーバ構築をはじめてみました。<br/>
+OSは、結構前に CentOS 5.5 をインストールしてたので、今日は、初期設定とファイルサーバの構築を目標に作業を開始。</p>
+
+<!-- more -->
+
+
+<h2>固定IPの設定</h2>
+
+<p>調べてみると、OSをインストールするときに固定IPの設定できるみたい。<br/>
+と言っても既にインストールしてるので、別の方法で設定することに&#8230;。
+そんなに難しくなくて、ifconfig コマンドで、IPアドレスやらを確認して、</p>
+
+<div>
+  <pre><code class='zsh'># vim /etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+ONBOOT=yes
+IPADDR=192.168.0.12
+NETMASK=255.255.255.0
+BROADCAST=192.168.0.255</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='zsh'># vim /etc/sysconfig/network
+NETWORKING=yes
+NETWORKING_IPV6=no
+HOSTNAME=centos.localdomain
+GATEWAY=192.168.0.1</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='zsh'># vim /etc/resolv.conf
+search localdomain
+nameserver 192.168.0.1</code></pre>
+</div>
+
+
+<p>最後に、ネットワークの再起動をして設定出来ているか確認。</p>
+
+<div>
+  <pre><code class='zsh'># sudo /etc/init.d/network restart</code></pre>
+</div>
+
+
+<p>特に異常がなければ、これで固定IPの設定は終了～</p>
+
+<h2>yum の初期設定, SELinux の無効化</h2>
+
+<p>ここからは、<a href="http://centossrv.com/centos5-init.shtml">CentOS5初期設定 - CentOSで自宅サーバー構築</a> を参考に作業しました。<br/>
+作業内容は、上記サイトで詳しく説明されてるので&#8230;割愛（手抜きｗ）<br/>
+いずれ使うということで、yum コマンドについての覚え書きを少し。</p>
+
+<div>
+  <pre><code class='tcsh'># yum check-update          ;; アップデート可能なパッケージ一覧
+# yum update                ;; アップデート可能なパッケージを一括アップデート
+# yum list                  ;; インストール可能なパッケージ一覧
+# yum list installed        ;; インストール済みのパッケージ一覧
+# yum search キーワード     ;; パッケージの検索
+# yum install パッケージ名  ;; パッケージのインストール
+# yum remove パッケージ名   ;; パッケージのアンインストール</code></pre>
+</div>
+
+
+<p>ファイルサーバ（samba）のほうは、PC（win, mac）の両方から見えるようにはできましたが、
+まだ未完成なので、作業ログは次回書きたいと思います。</p>
+]]></content>
+  </entry>
+  
+</feed>

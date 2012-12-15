@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: GPU, | crisis.tk's blog]]></title>
+  <link href="http:// crisis-tk.github.com/blog/categories/gpu-/atom.xml" rel="self"/>
+  <link href="http:// crisis-tk.github.com/"/>
+  <updated>2012-12-15T13:24:34+09:00</updated>
+  <id>http:// crisis-tk.github.com/</id>
+  <author>
+    <name><![CDATA[Kouta TOUME]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CUDA 4.2 インストール ~ サンプルコード作成/実行]]></title>
+    <link href="http:// crisis-tk.github.com/blog/2012/07/01/cuda-install/"/>
+    <updated>2012-07-01T15:27:00+09:00</updated>
+    <id>http:// crisis-tk.github.com/blog/2012/07/01/cuda-install</id>
+    <content type="html"><![CDATA[<p>手持ちの MacBook に CUDA を入れてみる。動作環境は下の通り。</p>
+
+<ul>
+<li>MacBook (2GHz Intel Core 2 Duo)</li>
+<li>Mac OS X 10.7.4</li>
+<li>CUDA 4.2</li>
+<li>GeForce 9400M</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>CUDA 4.2 のインストール</h2>
+
+<p>NVIDIAのサイト(<a href="http://developer.nvidia.com/cuda-downloads">http://developer.nvidia.com/cuda-downloads</a>) から必要な物をダウンロードする。<br/>
+今回は, 以下のものをダウンロード &amp; インストールした。</p>
+
+<ul>
+<li>CUDA Toolkit 4.2.9</li>
+<li>CUDA Drivers 4.2.10</li>
+<li>NVIDIA GPU Computing SDK 4.2.9</li>
+</ul>
+
+
+<p>インストールを終えたら, つぎは PATH の設定を行う。<br/>
+zsh を使ってるのであれば, <code>.zshrc</code> に以下のような内容を追加すればよい.</p>
+
+<pre><code># CUDA 設定
+export PATH=/usr/local/cuda/bin:$PATH
+export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
+export C_INCLUDE_PATH="/Developer/GPU Computing/C/common/inc"
+export CPLUS_INCLUDE_PATH="/Developer/GPU Computing/C/common/inc"
+</code></pre>
+
+<p>追加したら <code>exec zsh</code> あたりで設定を反映。
+正しく設定されていれば, 次のような結果になる。</p>
+
+<pre><code>% nvcc -V
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2012 NVIDIA Corporation
+Built on Sat_Apr__7_14:56:41_PDT_2012
+Cuda compilation tools, release 4.2, V0.2.1221
+</code></pre>
+
+<p>以上で CUDA の設定は終わり。</p>
+
+<h2>サンプルコードのコンパイル</h2>
+
+<p>SDK をインストールすると付いてくるサンプルコードをコンパイルして, CUDA の動作確認をする。<br/>
+サンプルコードは <code>/Developer/GPU Computing/C</code> にあるので,</p>
+
+<pre><code>% cd /Developer/GPU Computing/C
+% make
+</code></pre>
+
+<p>こんな感じでコンパイルできる。<br/>
+<code>lib/</code>フォルダに以下のようなライブラリファイルができていれば OK</p>
+
+<pre><code>% ls -1 lib
+libcutil_x86_64.a
+libparamgl_x86_64.a
+librendercheckgl_x86_64.a
+</code></pre>
+
+<p>サンプルコード <code>deviceQuery</code> を実行してみる。<br/>
+以下のようにデバイス情報が出力されていれば CUDA は正しく動作している。</p>
+
+<pre><code>% ./bin/darwin/release/deviceQuery
+[deviceQuery] starting...
+
+./bin/darwin/release/deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Found 1 CUDA Capable device(s)
+
+Device 0: "GeForce 9400M"
+  CUDA Driver Version / Runtime Version          4.2 / 4.2
+  CUDA Capability Major/Minor version number:    1.1
+  Total amount of global memory:                 254 MBytes (265945088 bytes)
+  ( 2) Multiprocessors x (  8) CUDA Cores/MP:    16 CUDA Cores
+  GPU Clock rate:                                1100 MHz (1.10 GHz)
+  Memory Clock rate:                             1064 Mhz
+  Memory Bus Width:                              128-bit
+  Max Texture Dimension Size (x,y,z)             1D=(8192), 2D=(65536,32768), 3D=(2048,2048,2048)
+  Max Layered Texture Size (dim) x layers        1D=(8192) x 512, 2D=(8192,8192) x 512
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       16384 bytes
+  Total number of registers available per block: 8192
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  768
+  Maximum number of threads per block:           512
+  Maximum sizes of each dimension of a block:    512 x 512 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             256 bytes
+  Concurrent copy and execution:                 No with 0 copy engine(s)
+  Run time limit on kernels:                     Yes
+  Integrated GPU sharing Host Memory:            Yes
+  Support host page-locked memory mapping:       Yes
+  Concurrent kernel execution:                   No
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support enabled:                No
+  Device is using TCC driver mode:               No
+  Device supports Unified Addressing (UVA):      No
+  Device PCI Bus ID / PCI location ID:           2 / 0
+  Compute Mode:
+     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 4.2, CUDA Runtime Version = 4.2, NumDevs = 1, Device = GeForce 9400M
+[deviceQuery] test results...
+PASSED
+
+&gt; exiting in 3 seconds: 3...2...1...done!
+</code></pre>
+
+<p>その他のサンプルコードも <code>bin/darwin/release/</code> 以下にある。<br/>
+これで CUDA を使う準備はできた。</p>
+
+<h2>CUDAプログラムを書いてみる</h2>
+
+<p><a href="http://www.gdep.jp/page/view/251">第4回 実際にCUDAを使ってみる</a> の Q3.Matrix のプログラムを実行してみる。<br/>
+CPU版は問題なかったのだが, GPU版のプログラムをコンパイルすると以下のようなコンパイルエラーがでた。</p>
+
+<pre><code>% nvcc matrix_gpu.cu
+Undefined symbols for architecture i386:
+  "_cutCreateTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutStartTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutStopTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutGetTimerValue", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutDeleteTimer", referenced from:
+      _main in tmpxft_0000755b_00000000-13_matrix_ex.o
+  "_cutCheckCmdLineFlag", referenced from:
+      __cutilExit(int, char**)in tmpxft_0000755b_00000000-13_matrix_ex.o
+ld: symbol(s) not found for architecture i386
+collect2: ld returned 1 exit status
+</code></pre>
+
+<p>調べてみると必要なライブラリがないときに出るエラーらしい。<br/>
+なので, <code>/Developer/GPU Computing/C/lib</code> にあるライブラリファイルを <code>/usr/lib</code> にコピーもしくはシンボリックリンクを貼ればよいとのこと。</p>
+
+<pre><code>% sudo ln -s /Developer/GPU Computing/C/lib/libcutil_x86_64.a /usr/lib/libcutil.a
+% sudo ln -s /Developer/GPU Computing/C/lib/libparamgl_x86_64.a /usr/lib/libparamgl.a
+% sudo ln -s /Developer/GPU Computing/C/lib/librendercheckgl_x86_64.a /usr/liblibrendercheckgl.a
+</code></pre>
+
+<p>さらにコンパイル時に <code>-lcutil</code>, <code>-m64</code> のオプションを指定してあげると上手くコンパイルできた。</p>
+
+<pre><code>% nvcc matrix_gpu.cu -lcutil -m64 -o matrix_gpu
+</code></pre>
+
+<h2>結果</h2>
+
+<p>以下, CPU版, GPU版の実行結果。</p>
+
+<pre><code>;; CPU版(最適化なし)
+% ./matrix_cpu
+Processing time: 68 (sec)
+
+;; CPU版(最適化あり)
+% ./matrix_cpu
+Processing time: 29 (sec)
+
+;; GPU版
+% ./matrix_gpu
+Processing time: 9255.196289 (msec)
+</code></pre>
+
+<p>最適化なしだと約7倍, 最適化あり(-O2)だと約3倍, GPU のほうが高速だった。<br/>
+個人的にはもう少し差がついてると面白かったんだけど...。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://developer.nvidia.com/cuda-downloads">CUDA Downloads | NVIDIA Developer Zone</a></li>
+<li><a href="http://tech.ckme.co.jp/cuda_inst_mac.shtml">CUDA - インストール（Mac OS X編）</a></li>
+<li><a href="http://www.gdep.jp/page/view/251">第4回 実際にCUDAを使ってみる</a></li>
+<li><a href="http://d.hatena.ne.jp/rabbit2go/20110707/1310037944">Mac miniでCUDA 4.0を使う</a></li>
+<li><a href="http://lqwerty.blog44.fc2.com/blog-entry-69.html">Lento ma non troppo - CUDA nvccコンパイラでエラーがでるとき</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
