@@ -78,25 +78,41 @@
 その前に、grails で使うための DB をあらかじめ作っておくのと、
 Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
 
-<div>
-  <pre><code class='groovy'>dataSource {
-    pooled = true
-    driverClassName = &quot;com.mysql.jdbc.Driver&quot;
-    username = &quot;ユーザネーム&quot;
-    password = &quot;パスワード&quot;
-}
-...
-environments {
-    development {
-        dataSource {
-            dbCreate = &quot;update&quot;
-            url = &quot;jdbc:mysql://localhost/データベース名&quot;
-        }
-        ...
-    }
-    ...
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dataSource</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">pooled</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="n">driverClassName</span> <span class="o">=</span> <span class="s2">&quot;com.mysql.jdbc.Driver&quot;</span>
+</span><span class='line'>    <span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;ユーザネーム&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;パスワード&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="n">environments</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">development</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">dataSource</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">dbCreate</span> <span class="o">=</span> <span class="s2">&quot;update&quot;</span>
+</span><span class='line'>            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/データベース名&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>これで、Grails から MySQL を使うことができる。</p>
@@ -105,10 +121,8 @@ environments {
 
 <p>まず、ドメインクラスを作成する。</p>
 
-<div>
-  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
-</div>
-
+<pre><code>% grails create-domain-class uploader
+</code></pre>
 
 <p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
 このファイルにテーブルのフィールド情報等を記述していく。</p>
@@ -134,25 +148,41 @@ environments {
 
 <p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
 
-<div>
-  <pre><code class='groovy'>class Uploader {
-    static constraints = {
-        title()
-        summary(maxSize:1000)
-        filename(blank:true, nullable:true)
-        dateCreated()
-        lastUpdated()
-    }
-    static mapping = {
-        sort &quot;lastUpdated&quot;:&quot;desc&quot;
-    }
-    String title
-    String summary
-    String filename
-    Date dateCreated
-    Date lastUpdated
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">Uploader</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">title</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">summary</span><span class="o">(</span><span class="nl">maxSize:</span><span class="mi">1000</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">filename</span><span class="o">(</span><span class="nl">blank:</span><span class="kc">true</span><span class="o">,</span> <span class="nl">nullable:</span><span class="kc">true</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">dateCreated</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">lastUpdated</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sort</span> <span class="s2">&quot;lastUpdated&quot;</span><span class="o">:</span><span class="s2">&quot;desc&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">title</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">summary</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">filename</span>
+</span><span class='line'>    <span class="n">Date</span> <span class="n">dateCreated</span>
+</span><span class='line'>    <span class="n">Date</span> <span class="n">lastUpdated</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
@@ -177,20 +207,31 @@ environments {
 <p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
 これらをまとめると、以下のような感じになる。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def upParam = new Uploader(params)
-        ...
-        if (!file.empty) {
-            ...
-            f.transferTo(new File('data/'+file.originalFilename))
-            upParam.filename = file.originalFilename
-        }
-        if (!upParam.hasErrors() &amp;&amp; upParam.save()) {
-        }</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">upParam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Uploader</span><span class="o">(</span><span class="n">params</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="o">...</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/&#39;</span><span class="o">+</span><span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span><span class="o">))</span>
+</span><span class='line'>            <span class="n">upParam</span><span class="o">.</span><span class="na">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">upParam</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">upParam</span><span class="o">.</span><span class="na">save</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>

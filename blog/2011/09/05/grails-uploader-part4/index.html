@@ -77,17 +77,25 @@
 <p>DB に格納されたファイル情報を基に、アップロードされたファイルの表示をする。
 そのため、DB からレコード一覧を取得する処理を Controller に記述。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ...
-    def upload = {
-        ...
-    }
-    def list = {
-        [tableData: Uploader.list()]
-    }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">list</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">tableData:</span> <span class="n">Uploader</span><span class="o">.</span><span class="na">list</span><span class="o">()]</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>前回ドメインクラスとして Uploader を定義したので、<code>list()</code> メソッドを呼び出すだけでレコード一覧を取得することができる。
@@ -98,19 +106,29 @@
 <p>tableData は配列（連想配列？）の形で渡されるので、<code>&lt;g:each&gt;</code> タグを使って要素を 1つずつ取り出して表示させる。<br/>
 具体的には次のように記述した。</p>
 
-<div>
-  <pre><code class='gsp'>&lt;div class=&quot;list&quot;&gt;
-        &lt;g:each in=&quot;${tableData}&quot; status=&quot;i&quot; var=&quot;record&quot;&gt;
-            &lt;p&gt;${record.filename}&lt;/p&gt;
-            &lt;g:if test=&quot;${record.filename}&quot;&gt;
-                &lt;p&gt;
-                    &lt;audio src=&quot;${createLinkTo(dir:'data/', file:''+record.filename)}&quot; controls&gt;
-                    &lt;/audio&gt;
-                &lt;/p&gt;
-            &lt;/g:if&gt;
-        &lt;/g:each&gt;
-    &lt;/div&gt;</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;list&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;g:each</span> <span class="na">in=</span><span class="s">&quot;${tableData}&quot;</span> <span class="na">status=</span><span class="s">&quot;i&quot;</span> <span class="na">var=</span><span class="s">&quot;record&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>${record.filename}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;g:if</span> <span class="na">test=</span><span class="s">&quot;${record.filename}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;p&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;audio</span> <span class="na">src=</span><span class="s">&quot;${createLinkTo(dir:&#39;data/&#39;, file:&#39;&#39;+record.filename)}&quot;</span> <span class="na">controls</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/audio&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/g:if&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/g:each&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>grailsタグの意味は、それぞれ以下の通り。</p>

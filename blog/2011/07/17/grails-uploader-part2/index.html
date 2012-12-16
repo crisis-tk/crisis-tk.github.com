@@ -89,26 +89,43 @@
 <p>調べたら、意外と簡単にできた。<br/>
 あとは、上のメソッドを前回作った controller に追加して&#8230;</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def file = request.getFile('myFile')
-        if (!file.empty) {
-            println &quot;Class: ${file.class}&quot;
-            println &quot;Name: ${file.name}&quot;
-            println &quot;OriginalFileName: ${file.originalFilename}&quot;
-            println &quot;Size: ${file.size}&quot;
-            println &quot;ContentType: ${file.contentType}&quot;
-            f.transferTo(new File('data/'+file.originalFilename))
-            response.sendError(200, 'Done')
-        }
-        else {
-            flash.message = 'file cannot be empty'
-            redirect(action: index)
-        }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getFile</span><span class="o">(</span><span class="s1">&#39;myFile&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Class: ${file.class}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Name: ${file.name}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;OriginalFileName: ${file.originalFilename}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Size: ${file.size}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;ContentType: ${file.contentType}&quot;</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/&#39;</span><span class="o">+</span><span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span><span class="o">))</span>
+</span><span class='line'>            <span class="n">response</span><span class="o">.</span><span class="na">sendError</span><span class="o">(</span><span class="mi">200</span><span class="o">,</span> <span class="s1">&#39;Done&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s1">&#39;file cannot be empty&#39;</span>
+</span><span class='line'>            <span class="n">redirect</span><span class="o">(</span><span class="nl">action:</span> <span class="n">index</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>こんな感じに編集。これでアップロードしたファイルと同じ名前でサーバに保存される。<br/>

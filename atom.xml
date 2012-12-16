@@ -4,7 +4,7 @@
   <title><![CDATA[crisis.tk's blog]]></title>
   <link href="http://crisis-tk.github.com/atom.xml" rel="self"/>
   <link href="http://crisis-tk.github.com/"/>
-  <updated>2012-12-15T19:13:44+09:00</updated>
+  <updated>2012-12-16T12:56:58+09:00</updated>
   <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
@@ -620,17 +620,25 @@ Rails 3.2.1</code></pre>
 <p>DB に格納されたファイル情報を基に、アップロードされたファイルの表示をする。
 そのため、DB からレコード一覧を取得する処理を Controller に記述。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ...
-    def upload = {
-        ...
-    }
-    def list = {
-        [tableData: Uploader.list()]
-    }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">list</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">tableData:</span> <span class="n">Uploader</span><span class="o">.</span><span class="na">list</span><span class="o">()]</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>前回ドメインクラスとして Uploader を定義したので、<code>list()</code> メソッドを呼び出すだけでレコード一覧を取得することができる。
@@ -641,19 +649,29 @@ Rails 3.2.1</code></pre>
 <p>tableData は配列（連想配列？）の形で渡されるので、<code>&lt;g:each&gt;</code> タグを使って要素を 1つずつ取り出して表示させる。<br/>
 具体的には次のように記述した。</p>
 
-<div>
-  <pre><code class='gsp'>&lt;div class=&quot;list&quot;&gt;
-        &lt;g:each in=&quot;${tableData}&quot; status=&quot;i&quot; var=&quot;record&quot;&gt;
-            &lt;p&gt;${record.filename}&lt;/p&gt;
-            &lt;g:if test=&quot;${record.filename}&quot;&gt;
-                &lt;p&gt;
-                    &lt;audio src=&quot;${createLinkTo(dir:'data/', file:''+record.filename)}&quot; controls&gt;
-                    &lt;/audio&gt;
-                &lt;/p&gt;
-            &lt;/g:if&gt;
-        &lt;/g:each&gt;
-    &lt;/div&gt;</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;list&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;g:each</span> <span class="na">in=</span><span class="s">&quot;${tableData}&quot;</span> <span class="na">status=</span><span class="s">&quot;i&quot;</span> <span class="na">var=</span><span class="s">&quot;record&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>${record.filename}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;g:if</span> <span class="na">test=</span><span class="s">&quot;${record.filename}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;p&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;audio</span> <span class="na">src=</span><span class="s">&quot;${createLinkTo(dir:&#39;data/&#39;, file:&#39;&#39;+record.filename)}&quot;</span> <span class="na">controls</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/audio&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/g:if&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/g:each&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>grailsタグの意味は、それぞれ以下の通り。</p>
@@ -693,25 +711,41 @@ Rails 3.2.1</code></pre>
 その前に、grails で使うための DB をあらかじめ作っておくのと、
 Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
 
-<div>
-  <pre><code class='groovy'>dataSource {
-    pooled = true
-    driverClassName = &quot;com.mysql.jdbc.Driver&quot;
-    username = &quot;ユーザネーム&quot;
-    password = &quot;パスワード&quot;
-}
-...
-environments {
-    development {
-        dataSource {
-            dbCreate = &quot;update&quot;
-            url = &quot;jdbc:mysql://localhost/データベース名&quot;
-        }
-        ...
-    }
-    ...
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dataSource</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">pooled</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="n">driverClassName</span> <span class="o">=</span> <span class="s2">&quot;com.mysql.jdbc.Driver&quot;</span>
+</span><span class='line'>    <span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;ユーザネーム&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;パスワード&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="n">environments</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">development</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">dataSource</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">dbCreate</span> <span class="o">=</span> <span class="s2">&quot;update&quot;</span>
+</span><span class='line'>            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/データベース名&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>これで、Grails から MySQL を使うことができる。</p>
@@ -720,10 +754,8 @@ environments {
 
 <p>まず、ドメインクラスを作成する。</p>
 
-<div>
-  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
-</div>
-
+<pre><code>% grails create-domain-class uploader
+</code></pre>
 
 <p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
 このファイルにテーブルのフィールド情報等を記述していく。</p>
@@ -749,25 +781,41 @@ environments {
 
 <p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
 
-<div>
-  <pre><code class='groovy'>class Uploader {
-    static constraints = {
-        title()
-        summary(maxSize:1000)
-        filename(blank:true, nullable:true)
-        dateCreated()
-        lastUpdated()
-    }
-    static mapping = {
-        sort &quot;lastUpdated&quot;:&quot;desc&quot;
-    }
-    String title
-    String summary
-    String filename
-    Date dateCreated
-    Date lastUpdated
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">Uploader</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">title</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">summary</span><span class="o">(</span><span class="nl">maxSize:</span><span class="mi">1000</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">filename</span><span class="o">(</span><span class="nl">blank:</span><span class="kc">true</span><span class="o">,</span> <span class="nl">nullable:</span><span class="kc">true</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">dateCreated</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">lastUpdated</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sort</span> <span class="s2">&quot;lastUpdated&quot;</span><span class="o">:</span><span class="s2">&quot;desc&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">title</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">summary</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">filename</span>
+</span><span class='line'>    <span class="n">Date</span> <span class="n">dateCreated</span>
+</span><span class='line'>    <span class="n">Date</span> <span class="n">lastUpdated</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
@@ -792,20 +840,31 @@ environments {
 <p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
 これらをまとめると、以下のような感じになる。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def upParam = new Uploader(params)
-        ...
-        if (!file.empty) {
-            ...
-            f.transferTo(new File('data/'+file.originalFilename))
-            upParam.filename = file.originalFilename
-        }
-        if (!upParam.hasErrors() &amp;&amp; upParam.save()) {
-        }</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">upParam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Uploader</span><span class="o">(</span><span class="n">params</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="o">...</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/&#39;</span><span class="o">+</span><span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span><span class="o">))</span>
+</span><span class='line'>            <span class="n">upParam</span><span class="o">.</span><span class="na">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">upParam</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">upParam</span><span class="o">.</span><span class="na">save</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>
@@ -848,26 +907,43 @@ DB に格納後ファイル一覧のページに redirect するように記述�
 <p>調べたら、意外と簡単にできた。<br/>
 あとは、上のメソッドを前回作った controller に追加して&#8230;</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def file = request.getFile('myFile')
-        if (!file.empty) {
-            println &quot;Class: ${file.class}&quot;
-            println &quot;Name: ${file.name}&quot;
-            println &quot;OriginalFileName: ${file.originalFilename}&quot;
-            println &quot;Size: ${file.size}&quot;
-            println &quot;ContentType: ${file.contentType}&quot;
-            f.transferTo(new File('data/'+file.originalFilename))
-            response.sendError(200, 'Done')
-        }
-        else {
-            flash.message = 'file cannot be empty'
-            redirect(action: index)
-        }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getFile</span><span class="o">(</span><span class="s1">&#39;myFile&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Class: ${file.class}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Name: ${file.name}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;OriginalFileName: ${file.originalFilename}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Size: ${file.size}&quot;</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;ContentType: ${file.contentType}&quot;</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/&#39;</span><span class="o">+</span><span class="n">file</span><span class="o">.</span><span class="na">originalFilename</span><span class="o">))</span>
+</span><span class='line'>            <span class="n">response</span><span class="o">.</span><span class="na">sendError</span><span class="o">(</span><span class="mi">200</span><span class="o">,</span> <span class="s1">&#39;Done&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s1">&#39;file cannot be empty&#39;</span>
+</span><span class='line'>            <span class="n">redirect</span><span class="o">(</span><span class="nl">action:</span> <span class="n">index</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>こんな感じに編集。これでアップロードしたファイルと同じ名前でサーバに保存される。<br/>
@@ -936,12 +1012,15 @@ DB に格納後ファイル一覧のページに redirect するように記述�
 <p>form を作成するため「uploader」フォルダの中に index.gsp というファイルを作成。<br/>
 index.gsp には、以下のような記述をする（ヘッダーとかは省略&#8230; ）</p>
 
-<div>
-  <pre><code class='gsp'>&lt;g:form action=&quot;upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
-  Upload Form:  &lt;input type=&quot;file&quot; name=&quot;myFile&quot; /&gt;
-  &lt;input type=&quot;submit&quot; /&gt;
-&lt;/g:form&gt;</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;g:form</span> <span class="na">action=</span><span class="s">&quot;upload&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">enctype=</span><span class="s">&quot;multipart/form-data&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  Upload Form:  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">name=</span><span class="s">&quot;myFile&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/g:form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>gspタグというのを使っているが、html のフォームとほとんど変わらないみたい。</p>
@@ -958,32 +1037,47 @@ controller の雛形は、「controllers」フォルダに生成されている�
 
 <p>初期の状態はこんな感じ。</p>
 
-<div>
-  <pre><code class='groovy'>package gapp
-class UploaderController {
-    def index = {
-    }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">package</span> <span class="n">gapp</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>このファイルに、form を送信したときの処理 uploadアクションを追加していく。<br/>
 具体的には次のような記述を追加する。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def f = request.getFile('myFile')
-        if (!f.empty) {
-            f.transferTo(new File('data/filename.jpg'))
-        }
-        else {
-            flash.message = 'file cannot be empty'
-            redirect(action: index)
-        }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">f</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getFile</span><span class="o">(</span><span class="s1">&#39;myFile&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/filename.jpg&#39;</span><span class="o">))</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s1">&#39;file cannot be empty&#39;</span>
+</span><span class='line'>            <span class="n">redirect</span><span class="o">(</span><span class="nl">action:</span> <span class="n">index</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><code>request.getFile('myFile')</code> メソッドでアップロードされたファイルの情報を取得。<br/>

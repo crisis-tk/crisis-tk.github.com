@@ -4,7 +4,7 @@
   <title><![CDATA[Category: grails | crisis.tk's blog]]></title>
   <link href="http://crisis-tk.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://crisis-tk.github.com/"/>
-  <updated>2012-12-15T19:13:44+09:00</updated>
+  <updated>2012-12-16T12:56:58+09:00</updated>
   <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
@@ -31,21 +31,20 @@
 <p>DB に格納されたファイル情報を基に、アップロードされたファイルの表示をする。
 そのため、DB からレコード一覧を取得する処理を Controller に記述。</p>
 
-<p><div>
-  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+<p>```groovy
+class UploaderController {</p>
 
-&lt;pre&gt;&lt;code&gt;...
+<pre><code>...
 def upload = {
     ...
 }
 def list = {
     [tableData: Uploader.list()]
 }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p>前回ドメインクラスとして Uploader を定義したので、<code>list()</code> メソッドを呼び出すだけでレコード一覧を取得することができる。
 取得したレコード一覧を <code>tableData</code> に設定すると、view 側で <code>tableData</code> から自由にレコードを取り出すことができる。</p>
@@ -55,25 +54,22 @@ def list = {
 <p>tableData は配列（連想配列？）の形で渡されるので、<code>&lt;g:each&gt;</code> タグを使って要素を 1つずつ取り出して表示させる。<br/>
 具体的には次のように記述した。</p>
 
-<p><div>
-  <pre><code class='gsp'>&lt;/p&gt;
+<p>```html</p>
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;list&quot;&amp;gt;
-    &amp;lt;g:each in=&quot;${tableData}&quot; status=&quot;i&quot; var=&quot;record&quot;&amp;gt;
-        &amp;lt;p&amp;gt;${record.filename}&amp;lt;/p&amp;gt;
-        &amp;lt;g:if test=&quot;${record.filename}&quot;&amp;gt;
-            &amp;lt;p&amp;gt;
-                &amp;lt;audio src=&quot;${createLinkTo(dir:'data/', file:''+record.filename)}&quot; controls&amp;gt;
-                &amp;lt;/audio&amp;gt;
-            &amp;lt;/p&amp;gt;
-        &amp;lt;/g:if&amp;gt;
-    &amp;lt;/g:each&amp;gt;
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code>&lt;div class="list"&gt;
+    &lt;g:each in="${tableData}" status="i" var="record"&gt;
+        &lt;p&gt;${record.filename}&lt;/p&gt;
+        &lt;g:if test="${record.filename}"&gt;
+            &lt;p&gt;
+                &lt;audio src="${createLinkTo(dir:'data/', file:''+record.filename)}" controls&gt;
+                &lt;/audio&gt;
+            &lt;/p&gt;
+        &lt;/g:if&gt;
+    &lt;/g:each&gt;
+&lt;/div&gt;
+</code></pre>
 
-&lt;p&gt;</code></pre>
-</div>
-</p>
+<p>```</p>
 
 <p>grailsタグの意味は、それぞれ以下の通り。</p>
 
@@ -112,32 +108,31 @@ def list = {
 その前に、grails で使うための DB をあらかじめ作っておくのと、
 Grails と MySQL を連携するためのドライバ MySQL JDBC をダウンロードし、「lib」フォルダ以下に置いておく必要がある。</p>
 
-<p><div>
-  <pre><code class='groovy'>dataSource {&lt;/p&gt;
+<p>```groovy
+dataSource {</p>
 
-&lt;pre&gt;&lt;code&gt;pooled = true
-driverClassName = &quot;com.mysql.jdbc.Driver&quot;
-username = &quot;ユーザネーム&quot;
-password = &quot;パスワード&quot;
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code>pooled = true
+driverClassName = "com.mysql.jdbc.Driver"
+username = "ユーザネーム"
+password = "パスワード"
+</code></pre>
 
-&lt;p&gt;}
+<p>}
 ...
-environments {&lt;/p&gt;
+environments {</p>
 
-&lt;pre&gt;&lt;code&gt;development {
+<pre><code>development {
     dataSource {
-        dbCreate = &quot;update&quot;
-        url = &quot;jdbc:mysql://localhost/データベース名&quot;
+        dbCreate = "update"
+        url = "jdbc:mysql://localhost/データベース名"
     }
     ...
 }
 ...
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p>これで、Grails から MySQL を使うことができる。</p>
 
@@ -145,10 +140,8 @@ environments {&lt;/p&gt;
 
 <p>まず、ドメインクラスを作成する。</p>
 
-<p><div>
-  <pre><code class='zsh'>% grails create-domain-class uploader</code></pre>
-</div>
-</p>
+<pre><code>% grails create-domain-class uploader
+</code></pre>
 
 <p>これで、<code>domain/{アプリ名}/Uploader.groovy</code> というファイルが生成されているので、
 このファイルにテーブルのフィールド情報等を記述していく。</p>
@@ -174,10 +167,10 @@ environments {&lt;/p&gt;
 
 <p>これらをまとめると、ドメインクラス Uploader.groovy は以下のような感じになる。</p>
 
-<p><div>
-  <pre><code class='groovy'>class Uploader {&lt;/p&gt;
+<p>```groovy
+class Uploader {</p>
 
-&lt;pre&gt;&lt;code&gt;static constraints = {
+<pre><code>static constraints = {
     title()
     summary(maxSize:1000)
     filename(blank:true, nullable:true)
@@ -185,18 +178,17 @@ environments {&lt;/p&gt;
     lastUpdated()
 }
 static mapping = {
-    sort &quot;lastUpdated&quot;:&quot;desc&quot;
+    sort "lastUpdated":"desc"
 }
 String title
 String summary
 String filename
 Date dateCreated
 Date lastUpdated
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p><code>static constraints ={}</code> には、フィールドの順番/長さ/パターンなど、フィールドに関する制約を記述。
 <code>static mapping = {}</code> には、主キー/複合キー等の設定や、今回のようにソート条件などを記述。<br/>
@@ -220,10 +212,10 @@ Date lastUpdated
 <p>また、params の filename は「myFile」となっているので、これをアップロードされたファイルのオリジナルネームに変更している。
 これらをまとめると、以下のような感じになる。</p>
 
-<p><div>
-  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+<p>```groovy
+class UploaderController {</p>
 
-&lt;pre&gt;&lt;code&gt;....
+<pre><code>....
 def upload = {
     def upParam = new Uploader(params)
     ...
@@ -232,13 +224,11 @@ def upload = {
         f.transferTo(new File('data/'+file.originalFilename))
         upParam.filename = file.originalFilename
     }
-    if (!upParam.hasErrors() &amp;amp;&amp;amp; upParam.save()) {
+    if (!upParam.hasErrors() &amp;&amp; upParam.save()) {
     }      
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;</code></pre>
-</div>
-</p>
+<p>```</p>
 
 <p>以上で、アップロードされたファイルの情報が指定した DB に書き込まれる。</p>
 
@@ -280,18 +270,18 @@ DB に格納後ファイル一覧のページに redirect するように記述�
 <p>調べたら、意外と簡単にできた。<br/>
 あとは、上のメソッドを前回作った controller に追加して...</p>
 
-<p><div>
-  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+<p>```groovy
+class UploaderController {</p>
 
-&lt;pre&gt;&lt;code&gt;....
+<pre><code>....
 def upload = {
     def file = request.getFile('myFile')
     if (!file.empty) {
-        println &quot;Class: ${file.class}&quot;
-        println &quot;Name: ${file.name}&quot;
-        println &quot;OriginalFileName: ${file.originalFilename}&quot;
-        println &quot;Size: ${file.size}&quot;
-        println &quot;ContentType: ${file.contentType}&quot;
+        println "Class: ${file.class}"
+        println "Name: ${file.name}"
+        println "OriginalFileName: ${file.originalFilename}"
+        println "Size: ${file.size}"
+        println "ContentType: ${file.contentType}"
         f.transferTo(new File('data/'+file.originalFilename))
         response.sendError(200, 'Done')
     }
@@ -299,11 +289,10 @@ def upload = {
         flash.message = 'file cannot be empty'
         redirect(action: index)
     }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p>こんな感じに編集。これでアップロードしたファイルと同じ名前でサーバに保存される。<br/>
 実行して気づいたのだが、<code>println</code> の行はページに表示されるのではなくてコンソールに出力される。</p>
@@ -371,13 +360,12 @@ def upload = {
 <p>form を作成するため「uploader」フォルダの中に index.gsp というファイルを作成。<br/>
 index.gsp には、以下のような記述をする（ヘッダーとかは省略... ）</p>
 
-<p><div>
-  <pre><code class='gsp'>&amp;lt;g:form action=&quot;upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
-  Upload Form:  &lt;input type=&quot;file&quot; name=&quot;myFile&quot; /&gt;
-  &lt;input type=&quot;submit&quot; /&gt;
-&amp;lt;/g:form&gt;</code></pre>
-</div>
-</p>
+<p><code>html
+&lt;g:form action="upload" method="post" enctype="multipart/form-data"&gt;
+  Upload Form:  &lt;input type="file" name="myFile" /&gt;
+  &lt;input type="submit" /&gt;
+&lt;/g:form&gt;
+</code></p>
 
 <p>gspタグというのを使っているが、html のフォームとほとんど変わらないみたい。</p>
 
@@ -393,25 +381,24 @@ controller の雛形は、「controllers」フォルダに生成されている�
 
 <p>初期の状態はこんな感じ。</p>
 
-<p><div>
-  <pre><code class='groovy'>package gapp
-class UploaderController {&lt;/p&gt;
+<p>```groovy
+package gapp
+class UploaderController {</p>
 
-&lt;pre&gt;&lt;code&gt;def index = {
+<pre><code>def index = {
 }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p>このファイルに、form を送信したときの処理 uploadアクションを追加していく。<br/>
 具体的には次のような記述を追加する。</p>
 
-<p><div>
-  <pre><code class='groovy'>class UploaderController {&lt;/p&gt;
+<p>```groovy
+class UploaderController {</p>
 
-&lt;pre&gt;&lt;code&gt;....
+<pre><code>....
 def upload = {
     def f = request.getFile('myFile')
     if (!f.empty) {
@@ -421,11 +408,10 @@ def upload = {
         flash.message = 'file cannot be empty'
         redirect(action: index)
     }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;}</code></pre>
-</div>
-</p>
+<p>}
+```</p>
 
 <p><code>request.getFile('myFile')</code> メソッドでアップロードされたファイルの情報を取得。<br/>
 <code>f.transferTo(new File('data/filename.jpg'))</code> で、MultiPartFormData をファイルそのものに変換。</p>

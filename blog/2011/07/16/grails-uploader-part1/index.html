@@ -90,12 +90,15 @@
 <p>form を作成するため「uploader」フォルダの中に index.gsp というファイルを作成。<br/>
 index.gsp には、以下のような記述をする（ヘッダーとかは省略&#8230; ）</p>
 
-<div>
-  <pre><code class='gsp'>&lt;g:form action=&quot;upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
-  Upload Form:  &lt;input type=&quot;file&quot; name=&quot;myFile&quot; /&gt;
-  &lt;input type=&quot;submit&quot; /&gt;
-&lt;/g:form&gt;</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;g:form</span> <span class="na">action=</span><span class="s">&quot;upload&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">enctype=</span><span class="s">&quot;multipart/form-data&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  Upload Form:  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">name=</span><span class="s">&quot;myFile&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/g:form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>gspタグというのを使っているが、html のフォームとほとんど変わらないみたい。</p>
@@ -112,32 +115,47 @@ controller の雛形は、「controllers」フォルダに生成されている�
 
 <p>初期の状態はこんな感じ。</p>
 
-<div>
-  <pre><code class='groovy'>package gapp
-class UploaderController {
-    def index = {
-    }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">package</span> <span class="n">gapp</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>このファイルに、form を送信したときの処理 uploadアクションを追加していく。<br/>
 具体的には次のような記述を追加する。</p>
 
-<div>
-  <pre><code class='groovy'>class UploaderController {
-    ....
-    def upload = {
-        def f = request.getFile('myFile')
-        if (!f.empty) {
-            f.transferTo(new File('data/filename.jpg'))
-        }
-        else {
-            flash.message = 'file cannot be empty'
-            redirect(action: index)
-        }
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kd">class</span> <span class="nc">UploaderController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">....</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">upload</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">f</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getFile</span><span class="o">(</span><span class="s1">&#39;myFile&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="na">empty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">f</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s1">&#39;data/filename.jpg&#39;</span><span class="o">))</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s1">&#39;file cannot be empty&#39;</span>
+</span><span class='line'>            <span class="n">redirect</span><span class="o">(</span><span class="nl">action:</span> <span class="n">index</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><code>request.getFile('myFile')</code> メソッドでアップロードされたファイルの情報を取得。<br/>
