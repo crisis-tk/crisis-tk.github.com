@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GPU | crisis.tk's blog]]></title>
   <link href="http://crisis-tk.github.com/blog/categories/gpu/atom.xml" rel="self"/>
   <link href="http://crisis-tk.github.com/"/>
-  <updated>2012-12-16T13:17:49+09:00</updated>
+  <updated>2012-12-18T00:23:00+09:00</updated>
   <id>http://crisis-tk.github.com/</id>
   <author>
     <name><![CDATA[Kouta TOUME]]></name>
@@ -12,6 +12,275 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CentOS 5.8 に CUDA 開発環境を導入する]]></title>
+    <link href="http://crisis-tk.github.com/blog/2012/12/18/centos58-cuda-setup/"/>
+    <updated>2012-12-18T00:20:00+09:00</updated>
+    <id>http://crisis-tk.github.com/blog/2012/12/18/centos58-cuda-setup</id>
+    <content type="html"><![CDATA[<p>CentOS 5.8 (64bit版) に CUDA 開発環境を導入する。
+導入環境は以下の通り。</p>
+
+<ul>
+<li>CentOS release 5.8 (Final)</li>
+<li>GeForce GTX 580</li>
+<li>gcc (GCC) 4.1.2 (Red Hat 4.1.2-52)</li>
+<li>g++ (GCC) 4.1.2 (Red Hat 4.1.2-52)</li>
+</ul>
+
+
+<!-- more -->
+
+
+<p>　</p>
+
+<h2>GPU の確認</h2>
+
+<p>CUDA 開発環境を導入する前に GPU が CUDA に対応しているかの確認を行う。
+CUDA に対応している GPU の一覧は <a href="https://developer.nvidia.com/cuda-gpus">CUDA GPUs</a> にまとめられている。</p>
+
+<p>GPU の型番は以下のコマンドで確認することができる。</p>
+
+<pre><code># lspci | grep NVIDIA
+02:00.0 VGA compatible controller: NVIDIA Corporation GF110 [GeForce GTX 580] (rev a1)
+02:00.1 Audio device: NVIDIA Corporation GF110 High Definition Audio Controller (rev a1)
+</code></pre>
+
+<p>　</p>
+
+<h2>必要なファイルのダウンロード</h2>
+
+<p>今回は CUDA 4.0 を導入するので, <a href="https://developer.nvidia.com/cuda-toolkit-40">CUDA Toolkit 4.0</a> から以下のファイルをダウンロードする。</p>
+
+<ul>
+<li>Developer Drivers for Linux (270.41.19)</li>
+<li>CUDA Toolkit for RedHat Enterprise Linux 5.5</li>
+<li>GPU Computing SDK - complete package including all code samples</li>
+</ul>
+
+
+<p>　</p>
+
+<h2>Developer Drivers のインストール</h2>
+
+<p>CUDA のドライバは, X-Windowシステムを停止させた状態でインストールする。</p>
+
+<pre><code># init 3
+# chmod +x *.run
+
+# ./devdriver_4.0_linux_64_270.41.19.run
+ERROR: Unable to find the kernel source tree for the currently running kernel.  Please make
+       sure you have installed the kernel source files for your kernel and that they are  
+       properly configured; on Red Hat Linux systems, for example, be sure you have the   
+       'kernel-source' or 'kernel-devel' RPM installed.  If you know the correct kernel   
+       source files are installed, you may specify the kernel source path with the        
+       '--kernel-source-path' command line option.
+</code></pre>
+
+<p>kernel-source か kernel-devel をインストールして, その PATH を指定する必要がある模様。<br/>
+既に kernel-devel がインストールされてたので kernel source の場所を確認して, 再度 Developer Drivers のインストールを行う。</p>
+
+<pre><code># ls /usr/src/kernels/
+2.6.18-308.16.1.el5-x86_64
+
+# ./devdriver_4.0_linux_64_270.41.19.run --kernel-source-path=/usr/src/kernels/2.6.18-308.16.1.el5-x86_64
+</code></pre>
+
+<p>インストール時にライセンスの確認(Accept), インストールの確認(Yes) をそれぞれ選択。
+最後にインストール完了(OK) を選択で終了。</p>
+
+<p>　</p>
+
+<h2>CUDA Toolkit のインストール</h2>
+
+<p>CUDA Toolkit のインストールと PATH の設定を行う。</p>
+
+<pre><code># ./cudatoolkit_4.0.17_linux_64_rhel5.5.run
+...
+Enter install path (default /usr/local/cuda, '/cuda' will be appended): [Enter]
+A previous version of CUDA was found in /usr/local/cuda/bin
+Would you like to uninstall? (yes/no/abort): Yes
+
+(省略)
+
+* Please make sure your PATH includes /usr/local/cuda/bin
+* Please make sure your LD_LIBRARY_PATH
+*   for 32-bit Linux distributions includes /usr/local/cuda/lib
+*   for 64-bit Linux distributions includes /usr/local/cuda/lib64:/usr/local/cuda/lib
+* OR
+*   for 32-bit Linux distributions add /usr/local/cuda/lib
+*   for 64-bit Linux distributions add /usr/local/cuda/lib64 and /usr/local/cuda/lib
+* to /etc/ld.so.conf and run ldconfig as root
+* Please read the release notes in /usr/local/cuda/doc/
+
+* To uninstall CUDA, delete /usr/local/cuda
+* Installation Complete
+</code></pre>
+
+<p>　</p>
+
+<h2>PATH の設定</h2>
+
+<p>インストールに成功すると上記のようなメッセージが表示されるので, PATH と LD_LIBRARY_PATH の設定を行う。</p>
+
+<pre><code># emacs -nw /etc/profile.d/cuda.sh
+# cat /etc/profile.d/cuda.sh
+#!/bin/bash
+
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+</code></pre>
+
+<p>　</p>
+
+<h2>GPU Computing SDK のインストール</h2>
+
+<p>最後に SDK のインストールを行う。
+ここでは個人のホームディレクトリにインストールを行なっていく。</p>
+
+<pre><code>$ ./gpucomputingsdk_4.0.17_linux.run
+...
+Enter install path (default ~/NVIDIA_GPU_Computing_SDK): [Enter]
+
+Located CUDA at /usr/local/cuda
+If this is correct, choose the default below.
+If it is not correct, enter the correct path to CUDA
+
+Enter CUDA install path (default /usr/local/cuda): [Enter]
+
+(省略)
+
+* Please make sure your PATH includes /usr/local/cuda/bin
+* Please make sure your LD_LIBRARY_PATH includes /usr/local/cuda/lib
+* To uninstall the NVIDIA GPU Computing SDK, please delete /home/crisis/NVIDIA_GPU_Computing_SDK
+* Installation Complete
+</code></pre>
+
+<p>　</p>
+
+<h2>ライブラリとサンプルの make</h2>
+
+<p>はじめにライブラリの make から。<br/>
+<code>~/NVIDIA_GPU_Computing_SDK/C/common</code> にある Makefile を実行することで CUDA 開発で必要なライブラリが生成される。</p>
+
+<pre><code>$ cd ~/NVIDIA_GPU_Computing_SDK/C/common
+$ make
+a - obj/x86_64/release/bank_checker.cpp.o
+a - obj/x86_64/release/cmd_arg_reader.cpp.o
+a - obj/x86_64/release/cutil.cpp.o
+a - obj/x86_64/release/stopwatch.cpp.o
+a - obj/x86_64/release/stopwatch_linux.cpp.o
+a - obj/x86_64/release/multithreading.cpp.o
+
+$ cd ../lib
+$ sudo cp libcutil_x86_64.a /usr/local/cuda/lib64
+</code></pre>
+
+<br>
+
+
+<p>つぎにサンプルの make を行なっていく。<br/>
+すべてのサンプルを make したいので, <code>~/NVIDIA_GPU_Computing_SDK/C</code> にある Makefile を実行する。</p>
+
+<pre><code>$ cd ~/NVIDIA_GPU_Computing_SDK/C
+$ make
+(省略)
+/usr/bin/ld: cannot find -lXi
+collect2: ld はステータス 1 で終了しました
+make[1]: *** [../../bin/linux/release/FunctionPointers] エラー 1
+make[1]: ディレクトリ `/home/crisis/NVIDIA_GPU_Computing_SDK/C/src/FunctionPointers' から出ます
+make: *** [src/FunctionPointers/Makefile.ph_build] エラー 2
+</code></pre>
+
+<p>ライブラリが足りないと上記のようなエラーとなる。<br/>
+今回は <code>/usr/bin/ld: cannot find -lXi</code> というエラーなので, <code>libXi-devel</code> を yum 等で追加してやれば解決できる。</p>
+
+<pre><code>$ sudo yum -y install libXi-devel
+
+$ make
+(省略)
+/usr/bin/ld: cannot find -lXmu
+collect2: ld はステータス 1 で終了しました
+make[1]: *** [../../bin/linux/release/FunctionPointers] エラー 1
+make[1]: ディレクトリ `/home/crisis/NVIDIA_GPU_Computing_SDK/C/src/FunctionPointers' から出ます
+make: *** [src/FunctionPointers/Makefile.ph_build] エラー 2
+
+$ sudo yum -y install libXmu-devel
+$ make
+(省略)
+Finished building all
+</code></pre>
+
+<p>以上で CUDA 開発環境の導入とサンプルプログラムの make が完了。
+最後に動作確認をしておきます。</p>
+
+<p>　</p>
+
+<h2>動作確認</h2>
+
+<p>GPU 情報の取得/表示を行う <code>deviceQuery</code> というサンプルプログラムで動作確認を行う。</p>
+
+<pre><code>$ cd ~/NVIDIA_GPU_Computing_SDK/C/bin/linux/release/
+$ ./deviceQuery
+./deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+cudaGetDeviceCount returned 38
+-&gt; no CUDA-capable device is detected
+[deviceQuery] test results...
+FAILED
+
+Press ENTER to exit…
+</code></pre>
+
+<p>「CUDA に対応したデバイスがない...」って感じかな？<br/>
+そんなはずはないと調べてみると, 同じ症状の方が居ました。</p>
+
+<blockquote><p>ドキュメントのpdfを見たらGUIを使っていない場合は/dev/nvidia*のデバイスファイルを手動で確保しないといけないらしくドキュメントに記載されているシェルを実行する必要があったみたいだ。
+(引用: <a href="http://d.hatena.ne.jp/flick-flick/20110818">自宅サーバのcuda環境を3.2→4.0にバージョンアップ</a>)</p></blockquote>
+
+<p>引用サイトに記載されていたシェルスクリプトを実行後, 再度 <code>deviceQuery</code> を実行。</p>
+
+<pre><code>$ ./deviceQuery
+[deviceQuery] starting...
+./deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Found 1 CUDA Capable device(s)
+
+Device 0: "GeForce GTX 580"
+  CUDA Driver Version / Runtime Version          4.0 / 4.0
+  CUDA Capability Major/Minor version number:    2.0
+  Total amount of global memory:                 1535 MBytes (1609760768 bytes)
+  (16) Multiprocessors x (32) CUDA Cores/MP:     512 CUDA Cores
+  GPU Clock Speed:                               1.59 GHz
+
+(省略)
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 4.0, CUDA Runtime Version = 4.0, NumDevs = 1, Device = GeForce GTX 580
+[deviceQuery] test results...
+PASSED
+
+Press ENTER to exit...
+</code></pre>
+
+<p>今度は問題なく実行できた。
+以上で動作確認終了。</p>
+
+<p>　</p>
+
+<h2>参考URL</h2>
+
+<ul>
+<li><a href="http://www.gdep.jp/page/view/210">Linux（CentOS 5.6）での環境の整え方 | G-DEP</a></li>
+<li><a href="http://d.hatena.ne.jp/flick-flick/20110818">自宅サーバのcuda環境を3.2→4.0にバージョンアップ</a></li>
+<li><a href="http://www.compensator.net/memo/2011/09/10/cuda40.html">CentOS 5.6にCUDA 4.0の開発環境を構築する</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CUDA 4.2 インストール ~ サンプルコード作成/実行]]></title>
