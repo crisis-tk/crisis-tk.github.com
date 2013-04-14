@@ -9,10 +9,15 @@
 	
 	<meta name="description" content="Grails で Uploader を作る">
 	<meta name="keywords" content="grails, html5, mvc, audio, groovy">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link href="/atom.xml" rel="alternate" title="crisis.tk's blog" type="application/atom+xml">
-	<link rel="canonical" href="">
+	
+	<link rel="canonical" href="http://crisis-tk.github.com/blog/2011/08/04/grails-uploader-part3/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -21,12 +26,17 @@
 	
 </head>
 
+
 <body>
 	<div class="container">
 		<div class="left-col">
 			<div class="intrude-less">
 			<header id="header" class="inner"><div class="profilepic">	
-	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+	<!-- <script src="/javascripts/md5.js"></script> -->
+	<!-- <script type="text/javascript"> -->
+	<!-- 	document.write("<img src='http://www.gravatar.com/avatar/" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />"); -->
+	<!-- </script> -->
+    <img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
 </div>
 <h1><a href="/">crisis.tk's blog</a></h1>
 <p class="subtitle">Ruby, Sinatra, GPGPU とか...</p>
@@ -49,6 +59,7 @@
 		
 		
 		
+		
 		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
 		
 	</div>
@@ -62,9 +73,9 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="post">
-	<h1 class="title">grails で uploader を作る。 その3</h1>
-	<div class="entry-content"><p>前回からの続き。<br/>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">grails で uploader を作る。 その3</h1>
+	<div class="entry-content" itemprop="articleBody"><p>前回からの続き。<br/>
 今回は、アップロードしたファイルの情報を DB に格納するところまで実装する。</p>
 
 <!-- more -->
@@ -270,7 +281,7 @@ DB に格納後ファイル一覧のページに redirect するように記述�
 </section>
 </div>
 			</div>
-			<footer id="footer" class="inner">Copyright &copy; 2012
+			<footer id="footer" class="inner">Copyright &copy; 2013
 
     Kouta TOUME
 
